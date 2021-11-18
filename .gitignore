@@ -1,0 +1,6 @@
+# ignore model files
+*.pth
+
+# ignore log files: predictions
+logs-eval/*.pkl
+
