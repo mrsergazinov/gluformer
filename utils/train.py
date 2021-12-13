@@ -38,16 +38,15 @@ class ExpLikeliLoss(nn.Module):
 
     return torch.mean((-1) * torch.logsumexp(torch.sum((-1 / (2 * SIGMA)) * (true - pred) ** 2, dim=1), dim=1))
     
-def collate_fn_custom(batch, num_samples=100):
+def modify_collate(num_samples):
   '''
   Repeat each sample in the dataset.
   '''
-
-  batch_rep = []
-  for sample in batch:
-    batch_rep = batch_rep + [sample for i in range(num_samples)]
-
-  return default_collate(batch_rep)
+  def wrapper(batch):
+    batch_rep = [sample for sample in batch for i in range(num_samples)]
+    return default_collate(batch_rep)
+  
+  return wrapper
 
 def adjust_learning_rate(model_optim, epoch, lr):
   lr = lr * (0.5 ** epoch)
