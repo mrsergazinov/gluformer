@@ -25,18 +25,18 @@ class EarlyStop:
         self.stop = True
 
 class ExpLikeliLoss(nn.Module):
-  def __init__(self, num_samples = 100):
+  def __init__(self, num_samples = 100, sigma = 0.3):
     super(ExpLikeliLoss, self).__init__()
     self.num_samples = num_samples
+    self.sigma = sigma
 
   def forward(self, pred, true):
     # pred & true: [b, l, d]
-    SIGMA = 0.3
     b, l, d = pred.size(0), pred.size(1), pred.size(2)
     true = true.transpose(0,1).reshape(l, -1, self.num_samples).transpose(0, 1)
     pred = pred.transpose(0,1).reshape(l, -1, self.num_samples).transpose(0, 1)
 
-    return torch.mean((-1) * torch.logsumexp(torch.sum((-1 / (2 * SIGMA)) * (true - pred) ** 2, dim=1), dim=1))
+    return torch.mean((-1) * torch.logsumexp(torch.sum((-1 / (2 * self.sigma)) * (true - pred) ** 2, dim=1), dim=1))
     
 def modify_collate(num_samples):
   '''

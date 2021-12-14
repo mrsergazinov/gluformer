@@ -1,4 +1,402 @@
+	 iters: 100, epoch: 1 | loss: 96.4195404
+	 speed: 0.5245s/iter; left time: 444261.0920s
+	 iters: 200, epoch: 1 | loss: 35.2630386
+	 speed: 0.5230s/iter; left time: 442912.9501s
+	 iters: 300, epoch: 1 | loss: 31.7910309
+	 speed: 0.5223s/iter; left time: 442310.5115s
+	 iters: 400, epoch: 1 | loss: 21.2611313
+	 speed: 0.5221s/iter; left time: 442061.7082s
+	 iters: 500, epoch: 1 | loss: 34.4576797
+	 speed: 0.5220s/iter; left time: 441887.1275s
+	 iters: 600, epoch: 1 | loss: 24.0573921
+	 speed: 0.5221s/iter; left time: 441976.0579s
+	 iters: 700, epoch: 1 | loss: 29.3442478
+	 speed: 0.5218s/iter; left time: 441611.8120s
+	 iters: 800, epoch: 1 | loss: 13.0305901
+	 speed: 0.5217s/iter; left time: 441529.9356s
+	 iters: 900, epoch: 1 | loss: 26.5408554
+	 speed: 0.5218s/iter; left time: 441509.8825s
+	 iters: 1000, epoch: 1 | loss: 20.8902359
+	 speed: 0.5217s/iter; left time: 441424.4564s
+	 iters: 1100, epoch: 1 | loss: 20.2818909
+	 speed: 0.5220s/iter; left time: 441613.8173s
+	 iters: 1200, epoch: 1 | loss: 32.9887276
+	 speed: 0.5216s/iter; left time: 441255.7495s
+	 iters: 1300, epoch: 1 | loss: 13.8020849
+	 speed: 0.5210s/iter; left time: 440696.3615s
+	 iters: 1400, epoch: 1 | loss: 16.5022888
+	 speed: 0.5217s/iter; left time: 441227.6380s
+	 iters: 1500, epoch: 1 | loss: 37.7634468
+	 speed: 0.5213s/iter; left time: 440841.8074s
+	 iters: 1600, epoch: 1 | loss: 15.3114033
+	 speed: 0.5222s/iter; left time: 441518.7699s
+	 iters: 1700, epoch: 1 | loss: 19.3974113
+	 speed: 0.5218s/iter; left time: 441140.4151s
+	 iters: 1800, epoch: 1 | loss: 21.4990044
+	 speed: 0.5220s/iter; left time: 441221.9647s
+	 iters: 1900, epoch: 1 | loss: 17.1695633
+	 speed: 0.5219s/iter; left time: 441127.5228s
+	 iters: 2000, epoch: 1 | loss: 27.4157009
+	 speed: 0.5216s/iter; left time: 440769.1500s
+	 iters: 2100, epoch: 1 | loss: 60.3956070
+	 speed: 0.5217s/iter; left time: 440840.5218s
+	 iters: 2200, epoch: 1 | loss: 16.0827599
+	 speed: 0.5219s/iter; left time: 440949.3806s
+	 iters: 2300, epoch: 1 | loss: 51.8670731
+	 speed: 0.5222s/iter; left time: 441186.9908s
+	 iters: 2400, epoch: 1 | loss: 14.4338741
+	 speed: 0.5223s/iter; left time: 441191.6785s
+	 iters: 2500, epoch: 1 | loss: 10.4526615
+	 speed: 0.5220s/iter; left time: 440901.4545s
+	 iters: 2600, epoch: 1 | loss: 54.8873749
+	 speed: 0.5223s/iter; left time: 441070.9529s
+	 iters: 2700, epoch: 1 | loss: 15.6553822
+	 speed: 0.5220s/iter; left time: 440814.0192s
+	 iters: 2800, epoch: 1 | loss: 12.3201237
+	 speed: 0.5227s/iter; left time: 441325.0963s
+	 iters: 2900, epoch: 1 | loss: 29.8480949
+	 speed: 0.5223s/iter; left time: 440922.9420s
+	 iters: 3000, epoch: 1 | loss: 25.1182365
+	 speed: 0.5223s/iter; left time: 440843.7952s
+	 iters: 3100, epoch: 1 | loss: 32.6416130
+	 speed: 0.5224s/iter; left time: 440866.1108s
+	 iters: 3200, epoch: 1 | loss: 12.5877256
+	 speed: 0.5223s/iter; left time: 440741.7910s
+	 iters: 3300, epoch: 1 | loss: 20.1605244
+	 speed: 0.5223s/iter; left time: 440749.0123s
+	 iters: 3400, epoch: 1 | loss: 18.6811199
+	 speed: 0.5222s/iter; left time: 440609.5200s
+	 iters: 3500, epoch: 1 | loss: 27.4281616
+	 speed: 0.5224s/iter; left time: 440711.0968s
+	 iters: 3600, epoch: 1 | loss: 20.4092865
+	 speed: 0.5223s/iter; left time: 440536.7353s
+	 iters: 3700, epoch: 1 | loss: 13.8164768
+	 speed: 0.5223s/iter; left time: 440467.0200s
+	 iters: 3800, epoch: 1 | loss: 22.3629551
+	 speed: 0.5221s/iter; left time: 440316.1153s
+	 iters: 3900, epoch: 1 | loss: 47.0638351
+	 speed: 0.5220s/iter; left time: 440136.7716s
+	 iters: 4000, epoch: 1 | loss: 18.7932281
+	 speed: 0.5224s/iter; left time: 440440.8089s
+	 iters: 4100, epoch: 1 | loss: 64.4356384
+	 speed: 0.5225s/iter; left time: 440431.4268s
+	 iters: 4200, epoch: 1 | loss: 20.3674660
+	 speed: 0.5222s/iter; left time: 440184.2086s
+	 iters: 4300, epoch: 1 | loss: 29.7012520
+	 speed: 0.5225s/iter; left time: 440326.1618s
+	 iters: 4400, epoch: 1 | loss: 19.5798817
+	 speed: 0.5223s/iter; left time: 440177.8585s
+	 iters: 4500, epoch: 1 | loss: 9.7005482
+	 speed: 0.5225s/iter; left time: 440228.3664s
+	 iters: 4600, epoch: 1 | loss: 17.5334110
+	 speed: 0.5222s/iter; left time: 439930.5470s
+	 iters: 4700, epoch: 1 | loss: 19.7803402
+	 speed: 0.5223s/iter; left time: 439994.6406s
+	 iters: 4800, epoch: 1 | loss: 18.3597069
+	 speed: 0.5221s/iter; left time: 439783.5668s
+	 iters: 4900, epoch: 1 | loss: 20.4497337
+	 speed: 0.5221s/iter; left time: 439725.6219s
+	 iters: 5000, epoch: 1 | loss: 19.7567062
+	 speed: 0.5225s/iter; left time: 439999.8224s
+	 iters: 5100, epoch: 1 | loss: 30.7289677
+	 speed: 0.5224s/iter; left time: 439843.3033s
+	 iters: 5200, epoch: 1 | loss: 16.8168621
+	 speed: 0.5227s/iter; left time: 440028.8882s
+	 iters: 5300, epoch: 1 | loss: 51.8477859
+	 speed: 0.5225s/iter; left time: 439824.8079s
+	 iters: 5400, epoch: 1 | loss: 20.5165958
+	 speed: 0.5226s/iter; left time: 439848.4639s
+	 iters: 5500, epoch: 1 | loss: 7.9571357
+	 speed: 0.5224s/iter; left time: 439619.9269s
+	 iters: 5600, epoch: 1 | loss: 10.7128735
+	 speed: 0.5227s/iter; left time: 439842.7758s
+	 iters: 5700, epoch: 1 | loss: 14.2056866
+	 speed: 0.5224s/iter; left time: 439543.2425s
+	 iters: 5800, epoch: 1 | loss: 34.8261261
+	 speed: 0.5229s/iter; left time: 439906.4440s
+	 iters: 5900, epoch: 1 | loss: 23.7664547
+	 speed: 0.5225s/iter; left time: 439567.2029s
+	 iters: 6000, epoch: 1 | loss: 18.2407837
+	 speed: 0.5228s/iter; left time: 439749.4768s
+	 iters: 6100, epoch: 1 | loss: 22.4860153
+	 speed: 0.5223s/iter; left time: 439252.3181s
+	 iters: 6200, epoch: 1 | loss: 30.1752644
+	 speed: 0.5227s/iter; left time: 439570.2024s
+	 iters: 6300, epoch: 1 | loss: 11.6441507
+	 speed: 0.5226s/iter; left time: 439382.6805s
+	 iters: 6400, epoch: 1 | loss: 12.7694778
+	 speed: 0.5227s/iter; left time: 439443.4062s
+	 iters: 6500, epoch: 1 | loss: 17.4926662
+	 speed: 0.5233s/iter; left time: 439891.9058s
+	 iters: 6600, epoch: 1 | loss: 26.3434105
+	 speed: 0.5231s/iter; left time: 439704.2972s
+	 iters: 6700, epoch: 1 | loss: 29.4010868
+	 speed: 0.5230s/iter; left time: 439559.6855s
+	 iters: 6800, epoch: 1 | loss: 11.5683794
+	 speed: 0.5235s/iter; left time: 439930.3469s
+	 iters: 6900, epoch: 1 | loss: 33.3130875
+	 speed: 0.5232s/iter; left time: 439617.6457s
+	 iters: 7000, epoch: 1 | loss: 17.3962765
+	 speed: 0.5232s/iter; left time: 439515.5112s
+	 iters: 7100, epoch: 1 | loss: 29.0483685
+	 speed: 0.5235s/iter; left time: 439702.2708s
+	 iters: 7200, epoch: 1 | loss: 19.0849743
+	 speed: 0.5228s/iter; left time: 439106.2800s
+	 iters: 7300, epoch: 1 | loss: 20.0318966
+	 speed: 0.5239s/iter; left time: 439981.9262s
+	 iters: 7400, epoch: 1 | loss: 16.4424820
+	 speed: 0.5234s/iter; left time: 439531.7269s
+	 iters: 7500, epoch: 1 | loss: 18.0353622
+	 speed: 0.5236s/iter; left time: 439590.8914s
+	 iters: 7600, epoch: 1 | loss: 24.9446926
+	 speed: 0.5236s/iter; left time: 439551.7604s
+	 iters: 7700, epoch: 1 | loss: 18.7553482
+	 speed: 0.5234s/iter; left time: 439328.9500s
+	 iters: 7800, epoch: 1 | loss: 21.8456345
+	 speed: 0.5232s/iter; left time: 439106.4763s
+	 iters: 7900, epoch: 1 | loss: 23.5360451
+	 speed: 0.5231s/iter; left time: 438997.9434s
+	 iters: 8000, epoch: 1 | loss: 9.9520111
+	 speed: 0.5235s/iter; left time: 439248.5327s
+	 iters: 8100, epoch: 1 | loss: 14.7413158
+	 speed: 0.5234s/iter; left time: 439157.8588s
+	 iters: 8200, epoch: 1 | loss: 23.9515705
+	 speed: 0.5234s/iter; left time: 439086.0949s
+	 iters: 8300, epoch: 1 | loss: 14.1211605
+	 speed: 0.5236s/iter; left time: 439230.3363s
+	 iters: 8400, epoch: 1 | loss: 22.3822556
+	 speed: 0.5235s/iter; left time: 439062.6062s
 Traceback (most recent call last):
-  File "train_uq.py", line 23, in <module>
-    from utils.test import *
-ModuleNotFoundError: No module named 'utils.test'
+  File "train_uq.py", line 219, in <module>
+    training()  
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 829, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 782, in main
+    rv = self.invoke(ctx)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 1066, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 610, in invoke
+    return callback(*args, **kwargs)
+  File "train_uq.py", line 168, in training
+    device=device)
+  File "/home/grads/m/mrsergazinov/gluformer/utils/train.py", line 78, in process_batch
+    pred = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/gluformer/gluformer/model.py", line 64, in forward
+    enc_out = self.encoder(enc_out)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/gluformer/gluformer/encoder.py", line 57, in forward
+    x = enc_layer(x)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/gluformer/gluformer/encoder.py", line 37, in forward
+    new_x = self.att(x, x, x)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/gluformer/gluformer/attention.py", line 65, in forward
+    att = F.softmax(scores / (self.d ** .5), dim=-1)                # b, h, n_q, n_k
+RuntimeError: CUDA out of memory. Tried to allocate 240.00 MiB (GPU 0; 10.76 GiB total capacity; 4.43 GiB already allocated; 101.94 MiB free; 4.78 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+	 iters: 100, epoch: 1 | loss: 59.2320290
+	 speed: 0.4791s/iter; left time: 405836.9222s
+	 iters: 200, epoch: 1 | loss: 24.7152710
+	 speed: 0.4758s/iter; left time: 402992.1471s
+	 iters: 300, epoch: 1 | loss: 35.2780228
+	 speed: 0.4758s/iter; left time: 402943.9854s
+	 iters: 400, epoch: 1 | loss: 29.6554413
+	 speed: 0.4760s/iter; left time: 403021.1926s
+	 iters: 500, epoch: 1 | loss: 48.1210136
+	 speed: 0.4759s/iter; left time: 402873.7609s
+	 iters: 600, epoch: 1 | loss: 46.5700340
+	 speed: 0.4759s/iter; left time: 402833.1850s
+	 iters: 700, epoch: 1 | loss: 16.9721699
+	 speed: 0.4759s/iter; left time: 402841.2810s
+	 iters: 800, epoch: 1 | loss: 19.5482330
+	 speed: 0.4759s/iter; left time: 402768.9711s
+	 iters: 900, epoch: 1 | loss: 16.0976906
+	 speed: 0.4761s/iter; left time: 402880.1386s
+	 iters: 1000, epoch: 1 | loss: 14.6778831
+	 speed: 0.4760s/iter; left time: 402745.5962s
+	 iters: 1100, epoch: 1 | loss: 15.6035662
+	 speed: 0.4760s/iter; left time: 402708.8597s
+	 iters: 1200, epoch: 1 | loss: 12.8388729
+	 speed: 0.4764s/iter; left time: 402946.4700s
+	 iters: 1300, epoch: 1 | loss: 22.9010391
+	 speed: 0.4759s/iter; left time: 402530.1496s
+	 iters: 1400, epoch: 1 | loss: 26.6398716
+	 speed: 0.4761s/iter; left time: 402654.3616s
+	 iters: 1500, epoch: 1 | loss: 24.7765713
+	 speed: 0.4762s/iter; left time: 402661.0384s
+	 iters: 1600, epoch: 1 | loss: 15.9857941
+	 speed: 0.4764s/iter; left time: 402795.6089s
+	 iters: 1700, epoch: 1 | loss: 13.4058847
+	 speed: 0.4764s/iter; left time: 402716.4754s
+	 iters: 1800, epoch: 1 | loss: 29.3977051
+	 speed: 0.4766s/iter; left time: 402856.9726s
+	 iters: 1900, epoch: 1 | loss: 15.1762514
+	 speed: 0.4765s/iter; left time: 402701.2677s
+	 iters: 2000, epoch: 1 | loss: 19.3346462
+	 speed: 0.4769s/iter; left time: 403022.3245s
+	 iters: 2100, epoch: 1 | loss: 18.4500027
+	 speed: 0.4766s/iter; left time: 402747.6016s
+	 iters: 2200, epoch: 1 | loss: 12.1152668
+	 speed: 0.4766s/iter; left time: 402719.0115s
+	 iters: 2300, epoch: 1 | loss: 29.4216747
+	 speed: 0.4772s/iter; left time: 403147.7527s
+	 iters: 2400, epoch: 1 | loss: 12.0172863
+	 speed: 0.4768s/iter; left time: 402713.6301s
+	 iters: 2500, epoch: 1 | loss: 19.5312061
+	 speed: 0.4776s/iter; left time: 403382.0275s
+	 iters: 2600, epoch: 1 | loss: 20.3521919
+	 speed: 0.4773s/iter; left time: 403075.0240s
+	 iters: 2700, epoch: 1 | loss: 9.6075401
+	 speed: 0.4770s/iter; left time: 402762.9422s
+	 iters: 2800, epoch: 1 | loss: 12.0919847
+	 speed: 0.4768s/iter; left time: 402578.0763s
+	 iters: 2900, epoch: 1 | loss: 20.5267925
+	 speed: 0.4775s/iter; left time: 403082.8472s
+	 iters: 3000, epoch: 1 | loss: 18.1406364
+	 speed: 0.4774s/iter; left time: 402983.5117s
+	 iters: 3100, epoch: 1 | loss: 17.3408203
+	 speed: 0.4773s/iter; left time: 402825.2595s
+	 iters: 3200, epoch: 1 | loss: 13.4421835
+	 speed: 0.4778s/iter; left time: 403175.4621s
+	 iters: 3300, epoch: 1 | loss: 29.6081696
+	 speed: 0.4777s/iter; left time: 403075.6663s
+	 iters: 3400, epoch: 1 | loss: 24.4049206
+	 speed: 0.4774s/iter; left time: 402758.3851s
+	 iters: 3500, epoch: 1 | loss: 12.4909496
+	 speed: 0.4780s/iter; left time: 403241.3279s
+	 iters: 3600, epoch: 1 | loss: 38.5733109
+	 speed: 0.4773s/iter; left time: 402611.2467s
+	 iters: 3700, epoch: 1 | loss: 23.9579086
+	 speed: 0.4772s/iter; left time: 402435.5971s
+	 iters: 3800, epoch: 1 | loss: 28.0549316
+	 speed: 0.4771s/iter; left time: 402346.7266s
+	 iters: 3900, epoch: 1 | loss: 5.8994493
+	 speed: 0.4772s/iter; left time: 402395.3616s
+	 iters: 4000, epoch: 1 | loss: 19.5122967
+	 speed: 0.4776s/iter; left time: 402646.1525s
+	 iters: 4100, epoch: 1 | loss: 15.4265165
+	 speed: 0.4773s/iter; left time: 402351.9544s
+	 iters: 4200, epoch: 1 | loss: 10.2374878
+	 speed: 0.4778s/iter; left time: 402721.2106s
+	 iters: 4300, epoch: 1 | loss: 16.9948578
+	 speed: 0.4772s/iter; left time: 402149.4730s
+	 iters: 4400, epoch: 1 | loss: 32.3714561
+	 speed: 0.4773s/iter; left time: 402203.3642s
+	 iters: 4500, epoch: 1 | loss: 29.6735573
+	 speed: 0.4779s/iter; left time: 402661.7791s
+	 iters: 4600, epoch: 1 | loss: 16.7396717
+	 speed: 0.4773s/iter; left time: 402140.9512s
+	 iters: 4700, epoch: 1 | loss: 19.6231995
+	 speed: 0.4778s/iter; left time: 402469.3642s
+	 iters: 4800, epoch: 1 | loss: 18.1652527
+	 speed: 0.4779s/iter; left time: 402560.7802s
+	 iters: 4900, epoch: 1 | loss: 19.6388206
+	 speed: 0.4778s/iter; left time: 402383.8109s
+	 iters: 5000, epoch: 1 | loss: 31.3587322
+	 speed: 0.4772s/iter; left time: 401845.0621s
+	 iters: 5100, epoch: 1 | loss: 25.2472668
+	 speed: 0.4779s/iter; left time: 402416.1165s
+	 iters: 5200, epoch: 1 | loss: 43.6327209
+	 speed: 0.4777s/iter; left time: 402212.4588s
+	 iters: 5300, epoch: 1 | loss: 19.3952751
+	 speed: 0.4779s/iter; left time: 402317.4460s
+	 iters: 5400, epoch: 1 | loss: 20.8017025
+	 speed: 0.4781s/iter; left time: 402412.9030s
+	 iters: 5500, epoch: 1 | loss: 37.6230621
+	 speed: 0.4775s/iter; left time: 401882.6808s
+	 iters: 5600, epoch: 1 | loss: 17.7693882
+	 speed: 0.4779s/iter; left time: 402157.5789s
+	 iters: 5700, epoch: 1 | loss: 21.8061581
+	 speed: 0.4778s/iter; left time: 402024.3806s
+	 iters: 5800, epoch: 1 | loss: 17.8828239
+	 speed: 0.4779s/iter; left time: 402071.8304s
+	 iters: 5900, epoch: 1 | loss: 10.2366390
+	 speed: 0.4779s/iter; left time: 402029.4999s
+	 iters: 6000, epoch: 1 | loss: 21.8723106
+	 speed: 0.4779s/iter; left time: 401925.6543s
+	 iters: 6100, epoch: 1 | loss: 17.4956970
+	 speed: 0.4780s/iter; left time: 401969.2713s
+	 iters: 6200, epoch: 1 | loss: 17.2407761
+	 speed: 0.4778s/iter; left time: 401742.4223s
+	 iters: 6300, epoch: 1 | loss: 24.8281918
+	 speed: 0.4781s/iter; left time: 401949.7237s
+	 iters: 6400, epoch: 1 | loss: 25.2592506
+	 speed: 0.4784s/iter; left time: 402164.6352s
+	 iters: 6500, epoch: 1 | loss: 11.4239025
+	 speed: 0.4780s/iter; left time: 401783.5124s
+	 iters: 6600, epoch: 1 | loss: 38.1420288
+	 speed: 0.4778s/iter; left time: 401582.6205s
+	 iters: 6700, epoch: 1 | loss: 11.4438114
+	 speed: 0.4778s/iter; left time: 401544.5493s
+	 iters: 6800, epoch: 1 | loss: 8.6127625
+	 speed: 0.4783s/iter; left time: 401903.7667s
+	 iters: 6900, epoch: 1 | loss: 24.7390442
+	 speed: 0.4781s/iter; left time: 401701.4618s
+	 iters: 7000, epoch: 1 | loss: 38.0116806
+	 speed: 0.4779s/iter; left time: 401448.5609s
+	 iters: 7100, epoch: 1 | loss: 20.2272282
+	 speed: 0.4779s/iter; left time: 401400.6029s
+	 iters: 7200, epoch: 1 | loss: 13.4783974
+	 speed: 0.4778s/iter; left time: 401330.9941s
+	 iters: 7300, epoch: 1 | loss: 24.3534508
+	 speed: 0.4780s/iter; left time: 401450.2520s
+	 iters: 7400, epoch: 1 | loss: 22.3558044
+	 speed: 0.4778s/iter; left time: 401187.7442s
+	 iters: 7500, epoch: 1 | loss: 14.8041620
+	 speed: 0.4780s/iter; left time: 401290.3353s
+	 iters: 7600, epoch: 1 | loss: 27.0662308
+	 speed: 0.4785s/iter; left time: 401674.0730s
+	 iters: 7700, epoch: 1 | loss: 10.5462208
+	 speed: 0.4779s/iter; left time: 401182.0324s
+	 iters: 7800, epoch: 1 | loss: 16.7716465
+	 speed: 0.4779s/iter; left time: 401114.6042s
+	 iters: 7900, epoch: 1 | loss: 41.3386803
+	 speed: 0.4785s/iter; left time: 401558.4060s
+	 iters: 8000, epoch: 1 | loss: 22.6295967
+	 speed: 0.4781s/iter; left time: 401164.4208s
+	 iters: 8100, epoch: 1 | loss: 29.2626972
+	 speed: 0.4783s/iter; left time: 401278.0790s
+	 iters: 8200, epoch: 1 | loss: 34.2761002
+	 speed: 0.4780s/iter; left time: 400998.1578s
+	 iters: 8300, epoch: 1 | loss: 24.8395767
+	 speed: 0.4783s/iter; left time: 401166.3140s
+	 iters: 8400, epoch: 1 | loss: 22.3436565
+	 speed: 0.4779s/iter; left time: 400838.0412s
+Traceback (most recent call last):
+  File "train_uq.py", line 219, in <module>
+    training()  
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 829, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 782, in main
+    rv = self.invoke(ctx)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 1066, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/click/core.py", line 610, in invoke
+    return callback(*args, **kwargs)
+  File "train_uq.py", line 168, in training
+    device=device)
+  File "/home/grads/m/mrsergazinov/gluformer/utils/train.py", line 78, in process_batch
+    pred = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/gluformer/gluformer/model.py", line 64, in forward
+    enc_out = self.encoder(enc_out)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/gluformer/gluformer/encoder.py", line 57, in forward
+    x = enc_layer(x)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/gluformer/gluformer/encoder.py", line 41, in forward
+    res = self.dropout(self.activ(self.conv1(res.transpose(-1,1))))
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1102, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/conv.py", line 301, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/conv.py", line 298, in _conv_forward
+    self.padding, self.dilation, self.groups)
+RuntimeError: CUDA out of memory. Tried to allocate 228.00 MiB (GPU 0; 10.76 GiB total capacity; 4.49 GiB already allocated; 129.94 MiB free; 4.75 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
