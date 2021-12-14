@@ -20,7 +20,6 @@ from gluformer.model import *
 
 from gludata.data_loader import *
 from utils.train import *
-from utils.test import *
 
 
 def load_data(num_samples, batch_size, len_pred, len_label, len_seq):
