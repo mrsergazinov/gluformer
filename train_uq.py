@@ -154,52 +154,52 @@ def training(num_samples, epochs, stop_epochs, lrate, batch_size,
         # compute average train loss
         train_loss = np.average(train_loss)
 
-        # compute validation loss
-        val_metric = []; val_loss = []
-        for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(val_data_loader):
-            pred, true = process_batch(subj_id = subj_id, 
-                                    batch_x=batch_x, 
-                                    batch_y=batch_y, 
-                                    batch_x_mark=batch_x_mark, 
-                                    batch_y_mark=batch_y_mark, 
-                                    len_pred=len_pred, 
-                                    len_label=len_label, 
-                                    model=model, 
-                                    device=device)
-            loss = criterion(pred, true)
-            val_loss.append(float(loss.item()))
-        val_loss = np.average(val_loss)
-        
-        # compute test loss + metric
-        test_metric = {3: [], 6: [], 9: [], 12:[]}; test_loss = []
-        for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(test_data_loader):
-            pred, true = process_batch(subj_id = subj_id, 
-                                    batch_x=batch_x, 
-                                    batch_y=batch_y, 
-                                    batch_x_mark=batch_x_mark, 
-                                    batch_y_mark=batch_y_mark, 
-                                    len_pred=len_pred, 
-                                    len_label=len_label, 
-                                    model=model, 
-                                    device=device)
-            loss = criterion(pred, true)
-            test_loss.append(float(loss.item()))
+        # compute validation / test loss + metric
+        with torch.no_grad():
+            val_metric = []; val_loss = []
+            for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(val_data_loader):
+                pred, true = process_batch(subj_id = subj_id, 
+                                        batch_x=batch_x, 
+                                        batch_y=batch_y, 
+                                        batch_x_mark=batch_x_mark, 
+                                        batch_y_mark=batch_y_mark, 
+                                        len_pred=len_pred, 
+                                        len_label=len_label, 
+                                        model=model, 
+                                        device=device)
+                loss = criterion(pred, true)
+                val_loss.append(float(loss.item()))
+            val_loss = np.average(val_loss)
 
-            # compute metrix: APE
-            pred = pred.detach().cpu().numpy(); true = true.detach().cpu().numpy()
-            # transform back to data space
-            pred = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-            true = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-            # arrange in proper shape
-            pred = pred.transpose((1,0,2)).reshape((pred.shape[1], -1, num_samples)).transpose((1, 0, 2))
-            pred = np.mean(pred, axis=2)
-            true = true.transpose((1,0,2)).reshape((true.shape[1], -1, num_samples)).transpose((1, 0, 2))[:, :, 0]
-            # compute APE: 15 mins (3 points), 30 mins (6 points), 45 mins (9 points), full (12 points)
+            test_metric = {3: [], 6: [], 9: [], 12:[]}; test_loss = []
+            for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(test_data_loader):
+                pred, true = process_batch(subj_id = subj_id, 
+                                        batch_x=batch_x, 
+                                        batch_y=batch_y, 
+                                        batch_x_mark=batch_x_mark, 
+                                        batch_y_mark=batch_y_mark, 
+                                        len_pred=len_pred, 
+                                        len_label=len_label, 
+                                        model=model, 
+                                        device=device)
+                loss = criterion(pred, true)
+                test_loss.append(float(loss.item()))
+
+                # compute metrix: APE
+                pred = pred.detach().cpu().numpy(); true = true.detach().cpu().numpy()
+                # transform back to data space
+                pred = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+                true = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+                # arrange in proper shape
+                pred = pred.transpose((1,0,2)).reshape((pred.shape[1], -1, num_samples)).transpose((1, 0, 2))
+                pred = np.mean(pred, axis=2)
+                true = true.transpose((1,0,2)).reshape((true.shape[1], -1, num_samples)).transpose((1, 0, 2))[:, :, 0]
+                # compute APE: 15 mins (3 points), 30 mins (6 points), 45 mins (9 points), full (12 points)
+                for i in [3,6,9,12]:
+                    test_metric[i].append(np.mean(np.abs(true[:, :i] - pred[:, :i]) / true[:, :i]))
+            test_loss = np.average(test_loss)
             for i in [3,6,9,12]:
-                test_metric[i].append(np.mean(np.abs(true[:, :i] - pred[:, :i]) / true[:, :i]))
-        test_loss = np.average(test_loss)
-        for i in [3,6,9,12]:
-                test_metric[i] = np.median(test_metric[i])
+                    test_metric[i] = np.median(test_metric[i])
         
         # check early stopping
         early_stop(val_metric, model, PATH_MODEL)

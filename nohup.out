@@ -400,3 +400,71 @@ Traceback (most recent call last):
   File "/home/grads/m/mrsergazinov/.conda/envs/gluformer/lib/python3.7/site-packages/torch/nn/modules/conv.py", line 298, in _conv_forward
     self.padding, self.dilation, self.groups)
 RuntimeError: CUDA out of memory. Tried to allocate 228.00 MiB (GPU 0; 10.76 GiB total capacity; 4.49 GiB already allocated; 129.94 MiB free; 4.75 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/functional.py:652: UserWarning: Named tensors and all their associated APIs are an experimental feature and subject to change. Please do not use them for anything important until they are released as stable. (Triggered internally at  /opt/conda/conda-bld/pytorch_1623448238472/work/c10/core/TensorImpl.h:1156.)
+  return torch.max_pool1d(input, kernel_size, stride, padding, dilation, ceil_mode)
+Traceback (most recent call last):
+  File "/home/mrsergazinov/python-git-workspace/gluformer/train_uq.py", line 219, in <module>
+    training()  
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 829, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 782, in main
+    rv = self.invoke(ctx)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 1066, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 610, in invoke
+    return callback(*args, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/train_uq.py", line 131, in training
+    pred, true = process_batch(subj_id = subj_id, 
+  File "/home/mrsergazinov/python-git-workspace/gluformer/utils/train.py", line 78, in process_batch
+    pred = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/model.py", line 67, in forward
+    dec_out = self.decoder(dec_out, enc_out)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/decoder.py", line 45, in forward
+    x_dec = layer(x_dec, x_enc)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/decoder.py", line 26, in forward
+    x_dec = x_dec + self.self_att(x_dec, x_dec, x_dec)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/attention.py", line 65, in forward
+    att = F.softmax(scores / (self.d ** .5), dim=-1)                # b, h, n_q, n_k
+RuntimeError: CUDA out of memory. Tried to allocate 80.00 MiB (GPU 0; 7.79 GiB total capacity; 6.03 GiB already allocated; 22.81 MiB free; 6.26 GiB reserved in total by PyTorch)
+/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/functional.py:652: UserWarning: Named tensors and all their associated APIs are an experimental feature and subject to change. Please do not use them for anything important until they are released as stable. (Triggered internally at  /opt/conda/conda-bld/pytorch_1623448238472/work/c10/core/TensorImpl.h:1156.)
+  return torch.max_pool1d(input, kernel_size, stride, padding, dilation, ceil_mode)
+Traceback (most recent call last):
+  File "/home/mrsergazinov/python-git-workspace/gluformer/train_uq.py", line 219, in <module>
+    training()  
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 829, in __call__
+    return self.main(*args, **kwargs)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 782, in main
+    rv = self.invoke(ctx)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 1066, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/click/core.py", line 610, in invoke
+    return callback(*args, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/train_uq.py", line 131, in training
+    pred, true = process_batch(subj_id = subj_id, 
+  File "/home/mrsergazinov/python-git-workspace/gluformer/utils/train.py", line 78, in process_batch
+    pred = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/model.py", line 67, in forward
+    dec_out = self.decoder(dec_out, enc_out)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/decoder.py", line 45, in forward
+    x_dec = layer(x_dec, x_enc)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/decoder.py", line 26, in forward
+    x_dec = x_dec + self.self_att(x_dec, x_dec, x_dec)
+  File "/home/mrsergazinov/anaconda3/envs/torch/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/mrsergazinov/python-git-workspace/gluformer/gluformer/attention.py", line 65, in forward
+    att = F.softmax(scores / (self.d ** .5), dim=-1)                # b, h, n_q, n_k
+RuntimeError: CUDA out of memory. Tried to allocate 80.00 MiB (GPU 0; 7.79 GiB total capacity; 6.03 GiB already allocated; 52.75 MiB free; 6.26 GiB reserved in total by PyTorch)
