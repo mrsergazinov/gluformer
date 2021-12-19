@@ -156,7 +156,7 @@ def training(num_samples, epochs, stop_epochs, lrate, batch_size,
 
         # compute validation / test loss + metric
         with torch.no_grad():
-            val_metric = []; val_loss = []
+            val_loss = []
             for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(val_data_loader):
                 pred, true = process_batch(subj_id = subj_id, 
                                         batch_x=batch_x, 
@@ -202,7 +202,7 @@ def training(num_samples, epochs, stop_epochs, lrate, batch_size,
                     test_metric[i] = np.median(test_metric[i])
         
         # check early stopping
-        early_stop(val_metric, model, PATH_MODEL)
+        early_stop(val_loss, model, PATH_MODEL)
         if early_stop.stop:
             print("Early stopping...")
             break
@@ -210,10 +210,10 @@ def training(num_samples, epochs, stop_epochs, lrate, batch_size,
         # update lr
         # adjust_learning_rate(model_optim, epoch, lr)
         
-        print("Epoch: {0} Time: {1} Steps: {2}".format(epoch+1, time.time() - epoch_time), TRAIN_STEPS)
+        print("Epoch: {0} Time: {1} Steps: {2}".format(epoch+1, time.time() - epoch_time, TRAIN_STEPS))
         print("Train Loss: {0:.7f} | Val Loss: {1:.7f} | Test Loss: {2:.7f}".format(train_loss, val_loss, test_loss))
         print("Test Loss (15 mins): {0:.7f} | (30 mins): {1:.7f} | (45 mins): {2:.7f} | (60 mins): {3:.7f}".format(
-            test_loss[3], test_loss[6], test_loss[9], test_loss[12]))
+            test_metric[3], test_metric[6], test_metric[9], test_metric[12]))
 
 if __name__ == '__main__':
     training()  
