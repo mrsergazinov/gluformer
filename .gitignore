@@ -4,3 +4,6 @@
 # ignore log files: predictions
 logs-eval/*.pkl
 
+# ignore old notebooks
+old-notebooks/
+
