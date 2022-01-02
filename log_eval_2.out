@@ -1,0 +1,34 @@
+APE for full 3 :0.033889
+RMSE for full 3 :6.230073
+APE for event 3 :0.034247
+RMSE for event 3 :7.667703
+APE for hypo 3 :0.093441
+RMSE for hypo 3 :6.907467
+APE for hyper 3 :0.029113
+RMSE for hyper 3 :7.849923
+APE for full 6 :0.054508
+RMSE for full 6 :10.374522
+APE for event 6 :0.055188
+RMSE for event 6 :12.705773
+APE for hypo 6 :0.149387
+RMSE for hypo 6 :10.221464
+APE for hyper 6 :0.048220
+RMSE for hyper 6 :13.439998
+APE for full 9 :0.073810
+RMSE for full 9 :14.139242
+APE for event 9 :0.075291
+RMSE for event 9 :17.673599
+APE for hypo 9 :0.200244
+RMSE for hypo 9 :14.354861
+APE for hyper 9 :0.065604
+RMSE for hyper 9 :18.580406
+APE for full 12 :0.091958
+RMSE for full 12 :17.470551
+APE for event 12 :0.094051
+RMSE for event 12 :21.985626
+APE for hypo 12 :0.251060
+RMSE for hypo 12 :17.836912
+APE for hyper 12 :0.082084
+RMSE for hyper 12 :23.192476
+Log likelihood: -103090.17389039519
+Average log likelihood: -7.301003816600226

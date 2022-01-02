@@ -1,0 +1,5 @@
+1. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 5 --variance 1 --r_drop 0.2 &
+2. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 5 --variance 1.5 --r_drop 0.2 &
+3. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 10 --variance 2 --r_drop 0.2 &
+4. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 10 --variance 1.25 --r_drop 0.2 &
+

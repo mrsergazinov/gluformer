@@ -77,6 +77,8 @@ def process_batch(subj_id,
 
   # model prediction
   pred = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
+
+  # clean cache
   del subj_id
   del batch_x
   del batch_x_mark 
