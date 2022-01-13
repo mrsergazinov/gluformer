@@ -87,7 +87,8 @@ def calculate_ape(pred, true, i, j):
     HYPO_THR = 70
     HYPER_THR = 180
 
-    true = true[:, 0]; pred = np.mean(pred, axis=1)
+    # median since ape corresponds to median
+    true = true[:, 0]; pred = np.median(pred, axis=1)
     if j == "event":
         if np.any(true >= HYPER_THR) or np.any(true <= HYPO_THR):
             return [np.mean(np.abs(pred[:i] - true[:i]) / np.abs(true[:i]))]
@@ -107,7 +108,7 @@ def calculate_ape(pred, true, i, j):
         return [np.mean(np.abs(pred[:i] - true[:i]) / np.abs(true[:i]))]
     return []
 
-def plot_calibration(calibration):
+def plot_calibration(calibration_path, calibration):
     calibration_matrix = np.empty((11, 13))
     probs = np.linspace(0, 1, 11)
     for i in range(12):
@@ -135,50 +136,56 @@ def plot_calibration(calibration):
         ax.plot(x, y, linestyle=':', color='gray')
     # Adjust the arrangement of the plots
     grid.fig.tight_layout(w_pad=1)
-    plt.savefig('calibration.pdf', dpi=300)
+    plt.savefig(calibration_path, dpi=300)
 
-# def plot_prediction():
-#     # define functions for plotting predictions
-#     def subplt(fig, index, x, y, yhat):
-#         ax = fig.add_subplot(2, 6, index)
-#         quants = np.quantile(yhat[0, :, :], q=[0.025, 0.975], axis=1) 
-#         mean = np.mean(yhat[0, :, :], axis=1)
-#         ax.plot(range(1,13), y[0, :], label = "True")
-#         ax.plot(range(1,13), mean, label = "Predicted")
-#         ax.plot(range(-180, 0, 1), x, label = "Input")
-#         if index > 6:
-#             ax.set(xlabel="Time")
-#         if index == 1 or index == 7:
-#             ax.set(ylabel="Glucose (mg/dL)")
-#         ax.fill_between(range(1,13), quants[0], quants[1], alpha=0.3, label = "95% CI")
-#         ax.legend(loc='upper left')
+def plot_prediction(prediction_path, inp, true, pred, varhat=-1):
+    # define functions for plotting predictions
+    def subplt(fig, index, x, y, yhat, varhat):
+        
+        HISTORY = 20
+        ax = fig.add_subplot(2, 6, index)
+        mean = np.mean(yhat, axis=1)
+        quants = 0
+        if varhat == -1:
+            quants = np.quantile(yhat, q=[0.025, 0.975], axis=1)
+        else:
+            quants = [mean - 2*np.sqrt(varhat), mean + 2*np.sqrt(varhat)]
+        ax.plot(range(1,13), y[:, 0], label = "True")
+        ax.plot(range(1,13), mean, label = "Predicted")
+        ax.plot(range(-HISTORY, 0, 1), x[-HISTORY:], label = "Input")
+        ax.fill_between(range(1,13), quants[0], quants[1], alpha=0.3, label = "95% CI")
+        if index > 6:
+            ax.set(xlabel="Time")
+        if index == 1 or index == 7:
+            ax.set(ylabel="Glucose (mg/dL)")
+        ax.legend(loc='upper left')
 
-#     plt.style.use("seaborn")
-#     fig = plt.figure()
-#     fig.set_size_inches(18, 6)
-#     fig.subplots_adjust(hspace=0.2, wspace=0.4)
-#     # plot selected samples 
-#     sample = [1000, 3000, 4105, 
-#             5000, 6000, 7000, 
-#             7500, 9000, 10000,
-#             11000, 12000, 12500]
-#     for i in range(1, 13):
-#         # subplt(fig, i, inp[sample[i-1]][1][0, :, 0], trues[sample[i-1]], preds[sample[i-1]])
-#     # plt.tight_layout()
-#     # plt.savefig('predictions.pdf', dpi=300)
+    plt.style.use("seaborn")
+    fig = plt.figure()
+    fig.set_size_inches(18, 6)
+    fig.subplots_adjust(hspace=0.2, wspace=0.4)
+    # plot selected samples
+    for i in range(12):
+        subplt(fig, i+1, inp[i], true[i], pred[i], varhat)
+    plt.tight_layout()
+    plt.savefig(prediction_path, dpi=300)
 
-def plot_sharpness(sharpness):
+def plot_sharpness(sharpness_path, sharpness):
     sharpness_values = np.array([np.mean(sharpness[i]) for i in range(12)])
     ax = plt.figure()
     ax = sns.lineplot(x = range(1, 13), y = sharpness_values, marker="o")
     ax.set(xlabel="Time", ylabel="Variance")
-    plt.savefig('sharpness.pdf', dpi=300)
+    plt.savefig(sharpness_path, dpi=300)
 
 
 @click.command()
 @click.option('--model_path', default="./model_best.pth", help='path to the model dict file')
+@click.option('--prediction_path', default="./predictions.pdf", help='path to save predictions')
+@click.option('--calibration_path', default="./calibration.pdf", help='path to save calibration for mixture model')
+@click.option('--sharpness_path', default="./sharpness.pdf", help='path to save sharpness for mixture model')
+@click.option('--gpu_index', default=0, help='index of gpu to use for training')
+@click.option('--loss_name', default="mixture", help='name of loss to train model')
 @click.option('--num_samples', default=1, help='number of samples from posterior')
-@click.option('--variance', default=0.3, help='variance of normals')
 @click.option('--len_pred', default=12, help='length to predict')
 @click.option('--len_label', default=60, help='length to feed to decoder')
 @click.option('--len_seq', default=180, help='length of lookback')
@@ -190,8 +197,8 @@ def plot_sharpness(sharpness):
 @click.option('--num_enc_layers', default=2, help='number of encoder layers')
 @click.option('--num_dec_layers', default=1, help='number of decoder layers')
 @click.option('--distil', default=True, help='distill or not between encoding')
-def test(model_path, num_samples,
-                variance, len_pred, len_label, len_seq,
+def test(model_path, prediction_path, calibration_path, sharpness_path, loss_name,
+                gpu_index, num_samples, len_pred, len_label, len_seq,
                 d_model, n_heads, d_fcn, r_drop, activ,
                 num_enc_layers, num_dec_layers, distil):
     # define consts -- experimental observations
@@ -202,13 +209,14 @@ def test(model_path, num_samples,
     BATCH_SIZE=1
 
     # determine device type
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-
+    device = torch.device('cuda:'+str(gpu_index)) if torch.cuda.is_available() else torch.device('cpu')
     # load data
     test_data_loader = load_data(num_samples, BATCH_SIZE, len_pred, len_label, len_seq)
     # define model
     model = build_model(model_path, device, d_model, n_heads, d_fcn, r_drop, activ, 
                     num_enc_layers, num_dec_layers, distil, len_pred)
+    if loss_name != "mixture":
+        model.eval()
 
     ape = {3: {"hypo": [], "hyper": [], "event": [], "full": []},
         6: {"hypo": [], "hyper": [], "event": [], "full": []},
@@ -221,8 +229,15 @@ def test(model_path, num_samples,
     calibration = [[] for i in range(12)]; sharpness = [[] for i in range(12)]
     likelihoods = []
 
+    # save predictions from 1 iteration
+    SAMPLES = [1, 1230, 2340, 3001, 4001, 5001, 6540, 7001, 8012, 9200, 10980, 11012]
+    sample = 0
+    save_pred = np.empty((len(SAMPLES), len_pred, num_samples))
+    save_true = np.empty((len(SAMPLES), len_pred, num_samples))
+    save_inp = np.empty((len(SAMPLES), len_seq))
+
     for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(test_data_loader):
-        pred, true = process_batch(subj_id=subj_id, 
+        pred, true, logvar = process_batch(subj_id=subj_id, 
                                     batch_x=batch_x, 
                                     batch_y=batch_y, 
                                     batch_x_mark=batch_x_mark, 
@@ -232,42 +247,71 @@ def test(model_path, num_samples,
                                     model=model, 
                                     device=device)
         pred = pred.detach().cpu().numpy(); true = true.detach().cpu().numpy()
-        # reshape such that samples are last dim 
-        pred = pred.transpose((1,0,2)).reshape((pred.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
-        true = true.transpose((1,0,2)).reshape((true.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
+        logvar = logvar.detach().cpu().numpy(); batch_x = batch_x.detach().cpu().numpy()
 
-        # calculate likelihood
-        likelihood = logsumexp(np.sum(((-1 / (2 * variance)) * (pred - true)**2), axis=0)) + np.log(1/num_samples) - (num_samples / 2) * np.log(2*np.pi*variance)
+        # calculate log-likelihood
+        likelihood = 0 
+        if loss_name == "mixture":
+            pred = pred.transpose((1,0,2)).reshape((pred.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
+            true = true.transpose((1,0,2)).reshape((true.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
+
+            likelihood = logsumexp(np.sum(((-1 / (2 * np.exp(logvar))) * (pred - true)**2), axis=0)) 
+            likelihood += np.log(1/num_samples) - (pred.shape[0] / 2) * np.log(2*np.pi*np.exp(logvar))
+        else:
+            pred = pred[0, :, :]
+            true = true[0, :, :]
+
+            likelihood = np.mean((pred - true)**2)
         likelihoods.append(likelihood)
 
-        # transform back
+        # save samples + predictions for plotting 
+        if i in SAMPLES:
+            save_pred[sample, :, :] = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+            save_true[sample, :, :] = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+            save_inp[sample, :] = (batch_x[0][:, 0] + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+            sample = sample + 1
+        
+        # transform data back
         pred = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
         true = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-
         # calculate ape / rmse for 3, 6, 9, 12 points AND full, event, hypo, hyper data
         for i in [3,6,9,12]:
             for j in ["full", "event", "hypo", "hyper"]:
                 ape[i][j] += calculate_ape(pred, true, i, j)
                 rmse[i][j] += calculate_rmse(pred, true, i, j)
         
-        # calculate calibration and sharpness (full data)
-        for i in range(12):
-            ecdf = ECDF(pred[i, :])
-            p = ecdf(true[i, 0])
-            calibration[i].append(p)
-            sharpness[i].append(np.var(pred[i, :]))
+        # calculate calibration and sharpness (full data) for mixture model
+        if loss_name == "mixture":
+            for i in range(12):
+                ecdf = ECDF(pred[i, :])
+                p = ecdf(true[i, 0])
+                calibration[i].append(p)
+                sharpness[i].append(np.var(pred[i, :]))
     
     for i in [3,6,9,12]:
         for j in ["full", "event", "hypo", "hyper"]:
             print("APE for " + j + " " + str(i) + " :{0:.6f}".format(np.median(ape[i][j])))
             print("RMSE for " + j + " " + str(i) + " :{0:.6f}".format(np.median(rmse[i][j])))
 
-    print("Log likelihood: {0}".format(np.sum(likelihoods)))
-    print("Average log likelihood: {0}".format(np.mean(likelihoods)))
-
-    # plot_calibration(calibration)
-    # plot_sharpness(sharpness)
-    # plot_prediction()
+    if loss_name=="mixture":
+        print("Log likelihood: {0}".format(np.sum(likelihoods)))
+        print("Average log likelihood: {0}".format(np.mean(likelihoods)))
+        plot_calibration(calibration_path, calibration)
+        plot_sharpness(sharpness_path, sharpness)
+        plot_prediction(prediction_path, save_inp, save_true, save_pred)
+        np.save('./input.npy', save_inp)
+        np.save('./true.npy', save_true)
+        np.save('./pred_w.npy', save_pred)
+    else:
+        varhat = np.mean(likelihoods)
+        print("Average log likelihood: {0}".format(-len_pred/2 - (len_pred/2)*np.log(2*np.pi*varhat)))
+        varhat = varhat * ((UPPER - LOWER) / (SCALE_1 * SCALE_2))**2
+        print("Variance MLE: {0}".format(varhat))
+        plot_prediction(prediction_path, save_inp, save_true, save_pred, varhat)
+        # np.save('./input.npy', save_inp)
+        # np.save('./true.npy', save_true)
+        # np.save('./pred_wo.npy', save_pred)
+        
 
 if __name__ == '__main__':
     test()  

@@ -26,18 +26,24 @@ class EarlyStop:
         self.stop = True
 
 class ExpLikeliLoss(nn.Module):
-  def __init__(self, num_samples = 100, sigma = 0.3):
+  def __init__(self, num_samples = 100, alpha=1):
+    # , var = 0.3
     super(ExpLikeliLoss, self).__init__()
     self.num_samples = num_samples
-    self.sigma = sigma
+    self.alpha = alpha
+    # self.var = var
 
-  def forward(self, pred, true):
+  def forward(self, pred, true, logvar):
     # pred & true: [b, l, d]
     b, l, d = pred.size(0), pred.size(1), pred.size(2)
     true = true.transpose(0,1).reshape(l, -1, self.num_samples).transpose(0, 1)
     pred = pred.transpose(0,1).reshape(l, -1, self.num_samples).transpose(0, 1)
 
-    return torch.mean((-1) * torch.logsumexp(torch.sum((-1 / (2 * self.sigma)) * (true - pred) ** 2, dim=1), dim=1))
+    # self.var
+    loss = torch.mean((-1) * torch.logsumexp(torch.sum((-1 / (2 * torch.exp(logvar))) * (true - pred) ** 2, dim=1), dim=1))
+    loss = loss + (l / 2) * logvar
+    penalty = self.alpha * logvar * logvar
+    return loss + penalty
     
 def modify_collate(num_samples):
   '''
@@ -76,7 +82,8 @@ def process_batch(subj_id,
   dec_inp = torch.cat([batch_y[:, :len_label, :], dec_inp], dim=1).float().to(device)
 
   # model prediction
-  pred = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
+  # pred = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
+  pred, logvar = model(subj_id, batch_x, batch_x_mark, dec_inp, batch_y_mark)
 
   # clean cache
   del subj_id
@@ -84,4 +91,4 @@ def process_batch(subj_id,
   del batch_x_mark 
   del dec_inp
   del batch_y_mark
-  return pred, true
+  return pred, true, logvar

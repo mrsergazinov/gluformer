@@ -1,5 +1,6 @@
-1. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 5 --variance 1 --r_drop 0.2 &
-2. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 5 --variance 1.5 --r_drop 0.2 &
-3. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 10 --variance 2 --r_drop 0.2 &
-4. nohup python model_train.py --num_samples 5 --epochs 100 --stop_epochs 10 --variance 1.25 --r_drop 0.2 &
-
+1. nohup python model_train.py --model_path "./model_best_1.pth" --num_samples 5 --epochs 100 --stop_epochs 10 --alpha 0 --r_drop 0.3 &
+nohup python model_eval.py --model_path "./model_best_1.pth" --prediction_path "./predictions_1.pdf" --calibration_path "./calibration_1.pdf" --sharpness_path "./sharpness_1.pdf" --gpu_index 3 --num_samples 100 --r_drop 0.3 &
+2. nohup python model_train.py --model_path "./model_best_2.pth" --num_samples 5 --epochs 100 --stop_epochs 10 --alpha 0 --r_drop 0.2 &
+nohup python model_eval.py --model_path "./model_best_2.pth" --prediction_path "./predictions_2.pdf" --calibration_path "./calibration_2.pdf" --sharpness_path "./sharpness_2.pdf" --gpu_index 3 --num_samples 100 --r_drop 0.2 & 
+3. nohup python model_train.py --model_path "./model_best_3.pth" --loss_name "mse" --num_samples 1 --epochs 100 --stop_epochs 10 --r_drop 0.05 &
+nohup python model_eval.py --model_path "./model_best_3.pth" --prediction_path "./predictions_3.pdf" --gpu_index 3 --loss_name "mse" --num_samples 1 --r_drop 0.05 &

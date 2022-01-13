@@ -59,6 +59,9 @@ class Gluformer(nn.Module):
     D_OUT = 1
     self.projection = nn.Linear(d_model, D_OUT, bias=True)
 
+    # Train variance
+    self.logvar = torch.nn.Parameter(torch.log(torch.rand(1)))
+
   def forward(self, x_id, x_enc, x_mark_enc, x_dec, x_mark_dec):
     enc_out = self.enc_embedding(x_id, x_enc, x_mark_enc)
     enc_out = self.encoder(enc_out)
@@ -66,8 +69,7 @@ class Gluformer(nn.Module):
     dec_out = self.dec_embedding(x_id, x_dec, x_mark_dec)
     dec_out = self.decoder(dec_out, enc_out)
     dec_out = self.projection(dec_out)
-    
-    return dec_out[:, -self.len_pred:, :] # [B, L, D]
+    return dec_out[:, -self.len_pred:, :], self.logvar # [B, L, D], log variance
 
 
 
