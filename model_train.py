@@ -56,7 +56,7 @@ def load_data(num_samples, batch_size, len_pred, len_label, len_seq):
     return train_data_loader, val_data_loader, test_data_loader
 
 def build_model(device, d_model, n_heads, d_fcn, r_drop, activ, 
-                    num_enc_layers, num_dec_layers, distil, len_pred):
+                    num_enc_layers, num_dec_layers, distil, len_seq, len_pred):
     model = Gluformer(d_model=d_model, 
                     n_heads=n_heads, 
                     d_fcn=d_fcn, 
@@ -64,7 +64,8 @@ def build_model(device, d_model, n_heads, d_fcn, r_drop, activ,
                     activ=activ, 
                     num_enc_layers=num_enc_layers, 
                     num_dec_layers=num_dec_layers,
-                    distil=distil, 
+                    distil=distil,
+                    len_seq=len_seq, 
                     len_pred=len_pred)
     model.train()
     model = model.to(device)
@@ -80,7 +81,6 @@ def build_model(device, d_model, n_heads, d_fcn, r_drop, activ,
 @click.option('--stop_epochs', default=10, help='number of epochs for early stopping')
 @click.option('--lrate', default=0.0002, help='learning rate of optimizer')
 @click.option('--batch_size', default=32, help='batch size for SGD')
-@click.option('--alpha', default=0, help='penalty for variance')
 @click.option('--len_pred', default=12, help='length to predict')
 @click.option('--len_label', default=60, help='length to feed to decoder')
 @click.option('--len_seq', default=180, help='length of lookback')
@@ -93,7 +93,7 @@ def build_model(device, d_model, n_heads, d_fcn, r_drop, activ,
 @click.option('--num_dec_layers', default=1, help='number of decoder layers')
 @click.option('--distil', default=True, help='distill or not between encoding')
 def training(model_path, gpu_index, loss_name, num_samples, epochs, stop_epochs, lrate, batch_size, 
-                alpha, len_pred, len_label, len_seq,
+                len_pred, len_label, len_seq,
                 d_model, n_heads, d_fcn, r_drop, activ,
                 num_enc_layers, num_dec_layers, distil):
     # define consts -- experimental observations
@@ -109,12 +109,12 @@ def training(model_path, gpu_index, loss_name, num_samples, epochs, stop_epochs,
     train_data_loader, val_data_loader, test_data_loader = load_data(num_samples, batch_size, len_pred, len_label, len_seq)
     # define model
     model = build_model(device, d_model, n_heads, d_fcn, r_drop, activ, 
-                    num_enc_layers, num_dec_layers, distil, len_pred)
+                    num_enc_layers, num_dec_layers, distil, len_seq, len_pred)
 
     # define loss and optimizer
     criterion = ""
     if loss_name == "mixture":
-        criterion =  ExpLikeliLoss(num_samples=num_samples, alpha = alpha)
+        criterion =  ExpLikeliLoss(num_samples=num_samples)
     else:
         criterion = nn.MSELoss()
     model_optim = torch.optim.Adam(model.parameters(), lr=lrate, betas=(0, 0.9))
@@ -151,7 +151,9 @@ def training(model_path, gpu_index, loss_name, num_samples, epochs, stop_epochs,
             train_loss.append(float(loss.item()))
             # print every 100
             if (i+1) % 100==0:
-                print("\t iters: {0}, epoch: {1} | loss: {2:.7f} | variance: {3:.7f}".format(i + 1, epoch + 1, loss.item(), np.exp(logvar.detach().cpu().numpy())[0]))
+                print("\t iters: {0}, epoch: {1} | loss: {2:.7f}".format(i + 1, epoch + 1, loss.item()))
+                logvar = logvar.reshape(-1, num_samples)
+                print("\t variance: ",np.exp(logvar.detach().cpu().numpy()[0, :]))
                 speed = (time.time() - curr_time) / iter_count
                 left_time = speed * ((epochs - epoch) * TRAIN_STEPS - i)
                 print('\t speed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))

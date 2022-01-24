@@ -43,7 +43,7 @@ def load_data(num_samples, batch_size, len_pred, len_label, len_seq):
     return test_data_loader
 
 def build_model(model_path, device, d_model, n_heads, d_fcn, r_drop, activ, 
-                    num_enc_layers, num_dec_layers, distil, len_pred):
+                    num_enc_layers, num_dec_layers, distil, len_seq, len_pred):
     model = Gluformer(d_model=d_model, 
                     n_heads=n_heads, 
                     d_fcn=d_fcn, 
@@ -52,6 +52,7 @@ def build_model(model_path, device, d_model, n_heads, d_fcn, r_drop, activ,
                     num_enc_layers=num_enc_layers, 
                     num_dec_layers=num_dec_layers,
                     distil=distil, 
+                    len_seq=len_seq,
                     len_pred=len_pred)
     model.load_state_dict(torch.load(model_path))
     model.train()
@@ -214,7 +215,7 @@ def test(model_path, prediction_path, calibration_path, sharpness_path, loss_nam
     test_data_loader = load_data(num_samples, BATCH_SIZE, len_pred, len_label, len_seq)
     # define model
     model = build_model(model_path, device, d_model, n_heads, d_fcn, r_drop, activ, 
-                    num_enc_layers, num_dec_layers, distil, len_pred)
+                    num_enc_layers, num_dec_layers, distil, len_seq, len_pred)
     if loss_name != "mixture":
         model.eval()
 
@@ -254,9 +255,10 @@ def test(model_path, prediction_path, calibration_path, sharpness_path, loss_nam
         if loss_name == "mixture":
             pred = pred.transpose((1,0,2)).reshape((pred.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
             true = true.transpose((1,0,2)).reshape((true.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
+            logvar.reshape(-1, num_samples)
 
-            likelihood = logsumexp(np.sum(((-1 / (2 * np.exp(logvar))) * (pred - true)**2), axis=0)) 
-            likelihood += np.log(1/num_samples) - (pred.shape[0] / 2) * np.log(2*np.pi*np.exp(logvar))
+            likelihood = logsumexp(-(pred.shape[0]/2) * (np.log(2*np.pi)+logvar) - (1/(2 * np.exp(logvar))) * np.sum((pred - true)**2, axis=0)) 
+            likelihood += np.log(1/num_samples)
         else:
             pred = pred[0, :, :]
             true = true[0, :, :]
@@ -308,9 +310,9 @@ def test(model_path, prediction_path, calibration_path, sharpness_path, loss_nam
         varhat = varhat * ((UPPER - LOWER) / (SCALE_1 * SCALE_2))**2
         print("Variance MLE: {0}".format(varhat))
         plot_prediction(prediction_path, save_inp, save_true, save_pred, varhat)
-        # np.save('./input.npy', save_inp)
-        # np.save('./true.npy', save_true)
-        # np.save('./pred_wo.npy', save_pred)
+        np.save('./input.npy', save_inp)
+        np.save('./true.npy', save_true)
+        np.save('./pred_wo.npy', save_pred)
         
 
 if __name__ == '__main__':

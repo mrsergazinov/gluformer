@@ -6,11 +6,12 @@ from gluformer.embed import *
 from gluformer.attention import *
 from gluformer.encoder import *
 from gluformer.decoder import *
+from gluformer.variance import *
 
 class Gluformer(nn.Module):
   def __init__(self, d_model, n_heads, d_fcn, r_drop, 
                 activ, num_enc_layers, num_dec_layers, 
-                distil, len_pred):
+                distil, len_seq, len_pred):
     super(Gluformer, self).__init__()
     # Set prediction length
     self.len_pred = len_pred
@@ -60,16 +61,18 @@ class Gluformer(nn.Module):
     self.projection = nn.Linear(d_model, D_OUT, bias=True)
 
     # Train variance
-    self.logvar = torch.nn.Parameter(torch.log(torch.rand(1)))
+    self.var = Variance(d_model, r_drop, len_seq)
 
   def forward(self, x_id, x_enc, x_mark_enc, x_dec, x_mark_dec):
     enc_out = self.enc_embedding(x_id, x_enc, x_mark_enc)
+    var_out = self.var(enc_out)
     enc_out = self.encoder(enc_out)
 
     dec_out = self.dec_embedding(x_id, x_dec, x_mark_dec)
     dec_out = self.decoder(dec_out, enc_out)
     dec_out = self.projection(dec_out)
-    return dec_out[:, -self.len_pred:, :], self.logvar # [B, L, D], log variance
+    
+    return dec_out[:, -self.len_pred:, :], var_out # [B, L, D], log variance
 
 
 
