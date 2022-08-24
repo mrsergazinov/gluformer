@@ -11,14 +11,14 @@ from gluformer.variance import *
 class Gluformer(nn.Module):
   def __init__(self, d_model, n_heads, d_fcn, r_drop, 
                 activ, num_enc_layers, num_dec_layers, 
-                distil, len_seq, len_pred):
+                distil, len_seq, len_pred, num_features=5):
     super(Gluformer, self).__init__()
     # Set prediction length
     self.len_pred = len_pred
     # Embedding
     # note: d_model // 2 == 0
-    self.enc_embedding = DataEmbedding(d_model, r_drop)
-    self.dec_embedding = DataEmbedding(d_model, r_drop)
+    self.enc_embedding = DataEmbedding(d_model, r_drop, num_features)
+    self.dec_embedding = DataEmbedding(d_model, r_drop, num_features)
     # Encoding
     self.encoder = Encoder(
       [
