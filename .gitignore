@@ -1,13 +1,15 @@
-# ignore model files
+# ignore model and data files
 *.pth
-
-# ignore log files: predictions
-logs-eval/*.pkl
-
-# ignore old notebooks
-old-notebooks/
+*.npy
+*.csv
+*.pkl
+cache/*
 
 # ignore plots
 *.pdf
-saved_output/
 
+# ignore pre-complied code
+*.cpython-37.pyc
+__pycache__/
+*.py[cod]
+*.pyc
