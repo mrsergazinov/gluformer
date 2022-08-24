@@ -35,10 +35,9 @@ class TokenEmbedding(nn.Module):
     return x
 
 class TemporalEmbedding(nn.Module):
-  def __init__(self, d_model):
+  def __init__(self, d_model, num_features):
     super(TemporalEmbedding, self).__init__()
-    NUM_FEATURES = 5
-    self.embed = nn.Linear(NUM_FEATURES, d_model)
+    self.embed = nn.Linear(num_features, d_model)
   
   def forward(self, x):
     x = x.float()
@@ -56,11 +55,11 @@ class SubjectEmbedding(nn.Module):
     return embed_x
 
 class DataEmbedding(nn.Module):
-  def __init__(self, d_model, r_drop):
+  def __init__(self, d_model, r_drop, num_features):
     super(DataEmbedding, self).__init__()
     # note: d_model // 2 == 0
     self.value_embedding = TokenEmbedding(d_model)
-    self.time_embedding = TemporalEmbedding(d_model) # alternative: TimeFeatureEmbedding
+    self.time_embedding = TemporalEmbedding(d_model, num_features) # alternative: TimeFeatureEmbedding
     self.positional_embedding = PositionalEmbedding(d_model)
     self.subject_embedding = SubjectEmbedding(d_model)
     self.dropout = nn.Dropout(r_drop)
