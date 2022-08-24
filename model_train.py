@@ -73,6 +73,7 @@ def build_model(device, d_model, n_heads, d_fcn, r_drop, activ,
     return model
 
 @click.command()
+@click.option('--trial_id', help='trial id')
 @click.option('--model_path', default="model_best.pth", help='save model here')
 @click.option('--gpu_index', default=0, help='index of gpu to use for training')
 @click.option('--loss_name', default="mixture", help='name of loss to train model')
@@ -92,7 +93,7 @@ def build_model(device, d_model, n_heads, d_fcn, r_drop, activ,
 @click.option('--num_enc_layers', default=2, help='number of encoder layers')
 @click.option('--num_dec_layers', default=1, help='number of decoder layers')
 @click.option('--distil', default=True, help='distill or not between encoding')
-def training(model_path, gpu_index, loss_name, num_samples, epochs, stop_epochs, lrate, batch_size, 
+def train(trial_id, model_path, gpu_index, loss_name, num_samples, epochs, stop_epochs, lrate, batch_size, 
                 len_pred, len_label, len_seq,
                 d_model, n_heads, d_fcn, r_drop, activ,
                 num_enc_layers, num_dec_layers, distil):
@@ -101,6 +102,9 @@ def training(model_path, gpu_index, loss_name, num_samples, epochs, stop_epochs,
     LOWER = 38
     SCALE_1 = 5
     SCALE_2 = 2
+
+    # define paths
+    model_path = os.path.join(f'./trials/{trial_id}', "model_best.pth")
 
     # determine device type
     device = torch.device('cuda:'+str(gpu_index)) if torch.cuda.is_available() else torch.device('cpu')
@@ -233,4 +237,4 @@ def training(model_path, gpu_index, loss_name, num_samples, epochs, stop_epochs,
             test_metric[3], test_metric[6], test_metric[9], test_metric[12]))
 
 if __name__ == '__main__':
-    training()  
+    train()  

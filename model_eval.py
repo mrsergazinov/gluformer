@@ -180,6 +180,7 @@ def plot_sharpness(sharpness_path, sharpness):
 
 
 @click.command()
+@click.option('--trial_id', help='trial id')
 @click.option('--model_path', default="./model_best.pth", help='path to the model dict file')
 @click.option('--prediction_path', default="./predictions.pdf", help='path to save predictions')
 @click.option('--calibration_path', default="./calibration.pdf", help='path to save calibration for mixture model')
@@ -198,7 +199,7 @@ def plot_sharpness(sharpness_path, sharpness):
 @click.option('--num_enc_layers', default=2, help='number of encoder layers')
 @click.option('--num_dec_layers', default=1, help='number of decoder layers')
 @click.option('--distil', default=True, help='distill or not between encoding')
-def test(model_path, prediction_path, calibration_path, sharpness_path, loss_name,
+def test(trial_id, model_path, prediction_path, calibration_path, sharpness_path, loss_name,
                 gpu_index, num_samples, len_pred, len_label, len_seq,
                 d_model, n_heads, d_fcn, r_drop, activ,
                 num_enc_layers, num_dec_layers, distil):
@@ -208,6 +209,12 @@ def test(model_path, prediction_path, calibration_path, sharpness_path, loss_nam
     SCALE_1 = 5
     SCALE_2 = 2
     BATCH_SIZE=1
+
+    # define paths
+    model_path = os.path.join(f'./trials/{trial_id}', "model_best.pth")
+    prediction_path = os.path.join(f'./trials/{trial_id}', "predictions.pdf")
+    calibration_path = os.path.join(f'./trials/{trial_id}', "calibration.pdf")
+    sharpness_path = os.path.join(f'./trials/{trial_id}', "sharpness.pdf")
 
     # determine device type
     device = torch.device('cuda:'+str(gpu_index)) if torch.cuda.is_available() else torch.device('cpu')
@@ -295,26 +302,27 @@ def test(model_path, prediction_path, calibration_path, sharpness_path, loss_nam
             print("APE for " + j + " " + str(i) + " :{0:.6f}".format(np.median(ape[i][j])))
             print("RMSE for " + j + " " + str(i) + " :{0:.6f}".format(np.median(rmse[i][j])))
 
+    if not os.path.exists('./cache/'):
+        os.makedirs('./cache/')
     if loss_name=="mixture":
         print("Log likelihood: {0}".format(np.sum(likelihoods)))
         print("Average log likelihood: {0}".format(np.mean(likelihoods)))
         plot_calibration(calibration_path, calibration)
         plot_sharpness(sharpness_path, sharpness)
         plot_prediction(prediction_path, save_inp, save_true, save_pred)
-        np.save('./input.npy', save_inp)
-        np.save('./true.npy', save_true)
-        np.save('./pred_w.npy', save_pred)
+        np.save('./cache/input.npy', save_inp)
+        np.save('./cache/true.npy', save_true)
+        np.save('./cache/pred_w.npy', save_pred)
     else:
         varhat = np.mean(likelihoods)
         print("Average log likelihood: {0}".format(-len_pred/2 - (len_pred/2)*np.log(2*np.pi*varhat)))
         varhat = varhat * ((UPPER - LOWER) / (SCALE_1 * SCALE_2))**2
         print("Variance MLE: {0}".format(varhat))
         plot_prediction(prediction_path, save_inp, save_true, save_pred, varhat)
-        np.save('./input.npy', save_inp)
-        np.save('./true.npy', save_true)
-        np.save('./pred_wo.npy', save_pred)
-        
-
+        np.save('./cache/input.npy', save_inp)
+        np.save('./cache/true.npy', save_true)
+        np.save('./cache/pred_wo.npy', save_pred)
+    
 if __name__ == '__main__':
     test()  
         
