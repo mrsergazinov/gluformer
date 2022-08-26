@@ -104,6 +104,8 @@ def train(trial_id, model_path, gpu_index, loss_name, num_samples, epochs, stop_
     SCALE_2 = 2
 
     # define paths
+    if not os.path.exists(f'./trials/{trial_id}'):
+        os.makedirs(f'./trials/{trial_id}')
     model_path = os.path.join(f'./trials/{trial_id}', "model_best.pth")
 
     # determine device type

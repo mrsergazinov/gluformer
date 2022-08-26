@@ -211,6 +211,8 @@ def test(trial_id, model_path, prediction_path, calibration_path, sharpness_path
     BATCH_SIZE=1
 
     # define paths
+    if not os.path.exists(f'./trials/{trial_id}'):
+        os.makedirs(f'./trials/{trial_id}')
     model_path = os.path.join(f'./trials/{trial_id}', "model_best.pth")
     prediction_path = os.path.join(f'./trials/{trial_id}', "predictions.pdf")
     calibration_path = os.path.join(f'./trials/{trial_id}', "calibration.pdf")
