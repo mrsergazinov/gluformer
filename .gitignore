@@ -1,6 +1,5 @@
 # ignore model and data files
 *.pth
-*.npy
 *.pkl
 
 # ignore plots

@@ -1,5 +1,5 @@
-1. nohup python model_train.py --trial_id "trial_1" --model_path "model_best_1.pth" --num_samples 5 --epochs 100 --stop_epochs 10 --r_drop 0.2 &> log_train_1.out &
-nohup python model_eval.py  --trial_id "trial_1" --model_path "model_best_1.pth" --prediction_path "predictions_1.pdf" --calibration_path "calibration_1.pdf" --sharpness_path "sharpness_1.pdf" --num_samples 100 --r_drop 0.2 &> log_eval_1.out &
+1. nohup python model_train.py --trial_id "trial_1" --model_path "model_best_1.pth" --num_samples 5 --epochs 100 --stop_epochs 10 --r_drop 0.2 &> ./trials/trial_1/log_train_1.out &
+nohup python model_eval.py  --trial_id "trial_1" --num_samples 100 --r_drop 0.2 &> ./trials/trial_1/log_eval_1.out &
 
-2. nohup python model_train.py --trial_id "trial_2" --model_path "model_best_2.pth" --gpu_index 3 --loss_name "mse" --num_samples 1 --epochs 100 --stop_epochs 10 --r_drop 0.05 &> log_train_2.out &
-nohup python model_eval.py --trial_id "trial_2" --model_path "./model_best_2.pth" --prediction_path "./predictions_2.pdf" --gpu_index 3 --loss_name "mse" --num_samples 1 --r_drop 0.05 &> log_eval_2.out &
+2. nohup python model_train.py --trial_id "trial_2" --model_path "model_best_2.pth" --gpu_index 3 --loss_name "mse" --num_samples 1 --epochs 100 --stop_epochs 10 --r_drop 0.05 &> ./trials/trial_2/log_train_2.out &
+nohup python model_eval.py --trial_id "trial_2" --gpu_index 3 --loss_name "mse" --num_samples 1 --r_drop 0.05 &> ./trials/trial_2/log_eval_2.out &

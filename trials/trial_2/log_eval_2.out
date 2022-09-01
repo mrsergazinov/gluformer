@@ -1,35 +1,35 @@
 nohup: ignoring input
-APE for full 3 :0.034864
-RMSE for full 3 :6.121426
-APE for event 3 :0.030248
-RMSE for event 3 :6.590446
-APE for hypo 3 :0.088762
-RMSE for hypo 3 :6.471646
-APE for hyper 3 :0.025456
-RMSE for hyper 3 :6.621596
-APE for full 6 :0.051848
-RMSE for full 6 :9.176517
-APE for event 6 :0.048483
-RMSE for event 6 :10.544806
-APE for hypo 6 :0.111276
-RMSE for hypo 6 :8.023640
-APE for hyper 6 :0.040694
-RMSE for hyper 6 :11.264410
-APE for full 9 :0.067668
-RMSE for full 9 :12.176168
-APE for event 9 :0.065360
-RMSE for event 9 :14.491230
-APE for hypo 9 :0.142600
-RMSE for hypo 9 :10.535478
-APE for hyper 9 :0.055335
-RMSE for hyper 9 :15.589475
-APE for full 12 :0.082596
-RMSE for full 12 :15.109882
-APE for event 12 :0.081823
-RMSE for event 12 :18.402542
-APE for hypo 12 :0.178647
-RMSE for hypo 12 :13.618114
-APE for hyper 12 :0.068828
-RMSE for hyper 12 :19.481766
-Average log likelihood: -13.079882838182698
+APE for full 3 minutes: 0.034864
+RMSE for full 3 minutes: 6.121426
+APE for event 3 minutes: 0.030248
+RMSE for event 3 minutes: 6.590446
+APE for hypo 3 minutes: 0.088762
+RMSE for hypo 3 minutes: 6.471646
+APE for hyper 3 minutes: 0.025456
+RMSE for hyper 3 minutes: 6.621596
+APE for full 6 minutes: 0.051848
+RMSE for full 6 minutes: 9.176517
+APE for event 6 minutes: 0.048483
+RMSE for event 6 minutes: 10.544806
+APE for hypo 6 minutes: 0.111276
+RMSE for hypo 6 minutes: 8.023640
+APE for hyper 6 minutes: 0.040694
+RMSE for hyper 6 minutes: 11.264410
+APE for full 9 minutes: 0.067668
+RMSE for full 9 minutes: 12.176168
+APE for event 9 minutes: 0.065360
+RMSE for event 9 minutes: 14.491230
+APE for hypo 9 minutes: 0.142600
+RMSE for hypo 9 minutes: 10.535478
+APE for hyper 9 minutes: 0.055335
+RMSE for hyper 9 minutes: 15.589475
+APE for full 12 minutes: 0.082596
+RMSE for full 12 minutes: 15.109882
+APE for event 12 minutes: 0.081823
+RMSE for event 12 minutes: 18.402542
+APE for hypo 12 minutes: 0.178647
+RMSE for hypo 12 minutes: 13.618114
+APE for hyper 12 minutes: 0.068828
+RMSE for hyper 12 minutes: 19.481766
+Average log likelihood: -56.214708133895044
 Variance MLE: 686.2492884159087
