@@ -9,8 +9,6 @@ import matplotlib.pylab as plt
 import click
 from scipy.special import logsumexp
 from scipy.stats import norm
-# TODO: remove ecdf
-# from statsmodels.distributions.empirical_distribution import ECDF
 
 import torch
 import torch.nn as nn
@@ -113,11 +111,6 @@ def calculate_ape(pred, true, i, j):
 
 @click.command()
 @click.option('--trial_id', help='trial id')
-# TODO: remove
-# @click.option('--model_path', default="./model_best.pth", help='path to the model dict file')
-# @click.option('--prediction_path', default="./predictions.pdf", help='path to save predictions')
-# @click.option('--calibration_path', default="./calibration.pdf", help='path to save calibration for mixture model')
-# @click.option('--sharpness_path', default="./sharpness.pdf", help='path to save sharpness for mixture model')
 @click.option('--gpu_index', default=0, help='index of gpu to use for training')
 @click.option('--loss_name', default="mixture", help='name of loss to train model')
 @click.option('--num_samples', default=1, help='number of samples from posterior')
@@ -132,8 +125,6 @@ def calculate_ape(pred, true, i, j):
 @click.option('--num_enc_layers', default=2, help='number of encoder layers')
 @click.option('--num_dec_layers', default=1, help='number of decoder layers')
 @click.option('--distil', default=True, help='distill or not between encoding')
-# TODO: remove
-# prediction_path, calibration_path, sharpness_path, model_path, 
 def test(trial_id, loss_name,
                 gpu_index, num_samples, len_pred, len_label, len_seq,
                 d_model, n_heads, d_fcn, r_drop, activ,
@@ -149,10 +140,6 @@ def test(trial_id, loss_name,
     if not os.path.exists(f'./trials/{trial_id}'):
         os.makedirs(f'./trials/{trial_id}')
     model_path = os.path.join(f'./trials/{trial_id}', "model_best.pth")
-    # TODO: remove
-    # prediction_path = os.path.join(f'./trials/{trial_id}', "predictions.pdf")
-    # calibration_path = os.path.join(f'./trials/{trial_id}', "calibration.pdf")
-    # sharpness_path = os.path.join(f'./trials/{trial_id}', "sharpness.pdf")
 
     # determine device type
     device = torch.device('cuda:'+str(gpu_index)) if torch.cuda.is_available() else torch.device('cpu')
@@ -243,11 +230,6 @@ def test(trial_id, loss_name,
                         for j in range(num_samples)]
                 p = np.average(ps)
                 calibration[i].append(p)
-                # TODO: remove the ecdf function computation
-                # ecdf = ECDF(pred[i, :])
-                # p = ecdf(true[i, 0])
-                # TODO: remove sharpness calculation
-                # sharpness[i].append(np.var(pred[i, :]))
     
     for horizon in horizons:
         for event in ["full", "event", "hypo", "hyper"]:
@@ -261,10 +243,6 @@ def test(trial_id, loss_name,
     if loss_name=="mixture":
         print("Log likelihood: {0}".format(np.sum(likelihoods)))
         print("Average log likelihood: {0}".format(np.mean(likelihoods)))
-        # TODO: remove
-        # plot_calibration(calibration_path, calibration)
-        # plot_sharpness(sharpness_path, sharpness)
-        # plot_prediction(prediction_path, save_inp, save_true, save_pred)
         np.save('./cache/visualize_glucose/input.npy', save_inp)
         np.save('./cache/visualize_glucose/true.npy', save_true)
         np.save('./cache/visualize_glucose/pred_mean_infmixt.npy', save_pred_mean)
@@ -278,8 +256,6 @@ def test(trial_id, loss_name,
         varhat = scale * varhat
         print("Average log likelihood: {0}".format(likelihood))
         print("Variance MLE: {0}".format(varhat))
-        # TODO: remove
-        # plot_prediction(prediction_path, save_inp, save_true, save_pred, varhat)
         np.save('./cache/visualize_glucose/input.npy', save_inp)
         np.save('./cache/visualize_glucose/true.npy', save_true)
         np.save('./cache/visualize_glucose/pred_mean_norm.npy', save_pred_mean)
@@ -287,78 +263,3 @@ def test(trial_id, loss_name,
     
 if __name__ == '__main__':
     test()  
-
-
-# def plot_calibration(calibration_path, calibration):
-#     calibration_matrix = np.empty((11, 13))
-#     probs = np.linspace(0, 1, 11)
-#     for i in range(12):
-#         for j in range(len(probs)):
-#             calibration_matrix[j, i+1] = np.mean(np.array(calibration[i]) <= probs[j])
-#     calibration_matrix[:, 0] = probs
-#     calibration_data = pd.DataFrame(calibration_matrix)
-#     calibration_data.columns = ["Expected Confidence"] + [str(i * 5) + " minutes" for i in range(1, 13)]
-#     calibration_data = calibration_data.melt(id_vars=["Expected Confidence"], var_name="Time", value_name="Observed Confidence")
-
-#     sns.set_theme()
-#     sns.set_context("paper")
-#     # Initialize a grid of plots with an Axes for each walk
-#     grid = sns.FacetGrid(calibration_data, col="Time", hue="Time", palette="tab20c",
-#                         col_wrap=6, height=2)
-#     # Draw a line plot to show the trajectory of each random walk
-#     grid.map(plt.plot, "Expected Confidence", "Observed Confidence", marker="o")
-#     # Adjust the tick positions and labels
-#     grid.set(xticks=[0, 0.2, 0.4, 0.6, 0.8, 1], yticks=[0, 0.2, 0.4, 0.6, 0.8, 1],
-#             xlim=(-.1, 1.1), ylim=(-.1, 1.1))
-#     # PLot diagonal 45 lines
-#     for ax in grid.axes.flat:
-#         x = np.linspace(0, 1, 11)
-#         y = x
-#         ax.plot(x, y, linestyle=':', color='gray')
-#     # Adjust the arrangement of the plots
-#     grid.fig.tight_layout(w_pad=1)
-#     plt.savefig(calibration_path, dpi=300)
-
-# def plot_prediction(prediction_path, inp, true, pred, varhat=-1):
-#     # define functions for plotting predictions
-#     def subplt(fig, index, x, y, yhat, varhat):
-        
-#         HISTORY = 20
-#         ax = fig.add_subplot(2, 6, index)
-#         mean = np.mean(yhat, axis=1)
-#         quants = 0
-#         if varhat == -1:
-#             quants = np.quantile(yhat, q=[0.025, 0.975], axis=1)
-#         else:
-#             quants = [mean - 2*np.sqrt(varhat), mean + 2*np.sqrt(varhat)]
-#         ax.plot(range(1,13), y[:, 0], label = "True")
-#         ax.plot(range(1,13), mean, label = "Predicted")
-#         ax.plot(range(-HISTORY, 0, 1), x[-HISTORY:], label = "Input")
-#         ax.fill_between(range(1,13), quants[0], quants[1], alpha=0.3, label = "95% CI")
-#         if index > 6:
-#             ax.set(xlabel="Time")
-#         if index == 1 or index == 7:
-#             ax.set(ylabel="Glucose (mg/dL)")
-#         ax.legend(loc='upper left')
-
-#     plt.style.use("seaborn")
-#     fig = plt.figure()
-#     fig.set_size_inches(18, 6)
-#     fig.subplots_adjust(hspace=0.2, wspace=0.4)
-#     # plot selected samples
-#     for i in range(12):
-#         subplt(fig, i+1, inp[i], true[i], pred[i], varhat)
-#     plt.tight_layout()
-#     plt.savefig(prediction_path, dpi=300)
-
-# def plot_sharpness(sharpness_path, sharpness):
-#     sharpness_values = np.array([np.mean(sharpness[i]) for i in range(12)])
-#     ax = plt.figure()
-#     ax = sns.lineplot(x = range(1, 13), y = sharpness_values, marker="o")
-#     ax.set(xlabel="Time", ylabel="Variance")
-#     plt.savefig(sharpness_path, dpi=300)
-        
-
-
-    
-
