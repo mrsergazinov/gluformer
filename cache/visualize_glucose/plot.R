@@ -7,26 +7,27 @@ library(reticulate)
 np <- import("numpy")
 
 # load data
-full_data <-  np$load("test_data.npy")
-input <- np$load("input_norm.npy")
-input_x <- np$load("input_x_norm.npy") * 14
-true <- np$load("true_mean_infmixt.npy")
+input <- np$load("input.npy")
+true <- np$load("true.npy")
 pred_mean_infmixt <- np$load("pred_mean_infmixt.npy")
-pred_var_infmixt <- exp(np$load("pred_logvar_infmixt.npy"))
+pred_var_infmixt <- np$load("pred_var_infmixt.npy")
 pred_mean_norm <- np$load("pred_mean_norm.npy")
 pred_var_norm <- np$load("pred_var_norm.npy")
 
+dim(pred_var_infmixt) = c(dim(pred_var_infmixt)[1],
+                          1,
+                          dim(pred_var_infmixt)[2])
 plts = list()
-for (i in 11:13) {
+for (i in c(1,5,9)) {
   # past and future / predicted observations
-  history = data.frame(y = input[i,, 1], x = -3:0)
+  history = data.frame(y = input[i,1:12], x = -11:0)
   infmixt = data.frame(y = true[i,, 1], 
-                       x = 1:2, 
+                       x = 1:12, 
                        pred = rowMeans(pred_mean_infmixt[i,,]),
                        muhat_infmixt = I(as.matrix(pred_mean_infmixt[i,,])),
-                       varhat_infmixt = I(as.matrix(pred_var_infmixt[i,c(1, 1),])))
+                       varhat_infmixt = I(as.matrix(pred_var_infmixt[i,rep(1, 12),])))
   normal = data.frame(y = true[i,, 1], 
-                      x = 1:2, 
+                      x = 1:12, 
                       pred = pred_mean_norm[i,,],
                       muhat_norm = I(as.matrix(pred_mean_norm[i,,])))
   
@@ -37,36 +38,31 @@ for (i in 11:13) {
       vals = c(vals, rnorm(100, x$muhat, sqrt(x$varhat)))
     }
     d = density(vals, n=100)
-    res = data.frame(x = x$x - 0.2*d$y, y = d$x)
+    res = data.frame(x = x$x - 70*d$y, y = d$x)
     res = res[order(res$y), ]
     res
   }))
   dens_infmixt$section <- rep(infmixt$x, each=100)
   
+  xs = do.call(rbind, 
+          lapply(split(dens_infmixt, dens_infmixt$section), 
+                 function(x) {
+                   x$y
+                 }
+  ))
+  normal$xs = I(xs)
+  
   # normal: estimate density across temporal dimension
   dens_normal <- do.call(rbind, lapply(split(normal, normal$x), function(x) {
-    vals = seq(-.5, 1.495,0.005)
-    d = dnorm(vals, x$muhat_norm, sqrt(pred_var_norm))
-    res = data.frame(x = x$x - 0.45*d, y = vals)
+    d = dnorm(x$xs, x$muhat_norm, sqrt(pred_var_norm))
+    res = data.frame(x = as.vector(x$x - 100*d), 
+                     y = as.vector(x$xs))
     res = res[order(res$y), ]
     res
   }))
-  dens_normal$section <- rep(normal$x, each=400)
+  dens_normal$section <- rep(normal$x, each=100)
   
-  # extract true samples for prediction period
-  index = input_x[i,,1]+1 # index of current sample (+1 for python)
-  index = c(index, index[length(index)]+c(1,2)) # extend for pred. window
-  data_sample = full_data[, index]
-  
-  # plot data
-  plt = ggplot(data.frame(x=-3:2, y=data_sample[1,]), aes(x, y, color = 'Train Data')) + 
-    geom_line(lwd = 0.5, alpha = 0.2)
-  for (j in 2:90) {
-    plt = plt + geom_line(data=data.frame(x=-3:2, 
-                                          y=data_sample[j,]), 
-                          aes(x, y, color='Train Data'), lwd = 0.5, alpha = 0.2)
-  }
-  # plot prediction
+  plt = ggplot()
   plt = plt + geom_line(data=rbind(infmixt[, 1:2], history), aes(x, y, color='Test Sample'), lwd = 1.1) + 
     geom_point(data=rbind(infmixt[, 1:2], history), aes(x, y, color='Test Sample')) +
     # geom_line(data=infmixt, aes(x, pred, color='(Mixture) Predicted Density'), lwd = 1.1) + 
@@ -76,7 +72,7 @@ for (i in 11:13) {
     geom_path(data=dens_infmixt, aes(x, y, group=interaction(section), color="(Mixture) Predicted Density"), lwd=1, alpha=0.5) +
     geom_path(data=dens_normal, aes(x, y, group=interaction(section), color="(Gaussian) Predicted Density"), lwd=1, alpha=0.5) + 
     theme_bw() +
-    geom_vline(xintercept=1:2, lty=2) +
+    geom_vline(xintercept=1:12, lty=2) +
     scale_colour_manual(name = "", values = c("(Mixture) Predicted Density" = "darkgreen",
                                               "(Gaussian) Predicted Density" = "red",
                                               "Train Data" = "#999999",
@@ -84,13 +80,12 @@ for (i in 11:13) {
                                               )) +
     guides(color=guide_legend(nrow=2,byrow=TRUE)) +
     xlab("Time") + 
-    theme(legend.position="bottom", text = element_text(size = 13)) + 
-    scale_x_continuous(breaks=seq(-4,6,1))
-  if (i == 11) {
+    theme(legend.position="bottom", text = element_text(size = 13))
+  if (i == 1) {
     plt = plt + ylab("Value")
   } else {
     plt = plt + ylab(" ")
   }
   plts[[i]] = plt
 }
-ggarrange(plts[[11]], plts[[13]], ncol=2, common.legend = TRUE, legend="bottom")
+ggarrange(plts[[1]], plts[[9]], ncol=2, common.legend = TRUE, legend="bottom")
