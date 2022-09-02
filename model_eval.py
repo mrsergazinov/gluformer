@@ -273,9 +273,9 @@ def test(trial_id, loss_name,
 
     else:
         varhat = np.mean(likelihoods)
+        likelihood = -0.5*len_pred- 0.5*len_pred*np.log(2*np.pi*varhat)
         scale = ((UPPER - LOWER) / (SCALE_1 * SCALE_2)) ** 2
         varhat = scale * varhat
-        likelihood = -0.5*len_pred- 0.5*len_pred*np.log(2*np.pi*varhat)
         print("Average log likelihood: {0}".format(likelihood))
         print("Variance MLE: {0}".format(varhat))
         # TODO: remove
