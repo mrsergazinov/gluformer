@@ -235,8 +235,8 @@ def test(trial_id, loss_name,
         for event in ["full", "event", "hypo", "hyper"]:
             ape_horizon_event = np.median(ape[horizon][event])
             rmse_horizon_event = np.median(rmse[horizon][event])
-            print(f"APE for {event} {horizon} minutes: {ape_horizon_event:.6f}")
-            print(f"RMSE for {event} {horizon} minutes: {rmse_horizon_event:.6f}")
+            print(f"APE for {event} {5*horizon} minutes: {ape_horizon_event:.6f}")
+            print(f"RMSE for {event} {5*horizon} minutes: {rmse_horizon_event:.6f}")
 
     if not os.path.exists('./cache/visualize_glucose/'):
         os.makedirs('./cache/visualize_glucose/')
