@@ -1,5 +1,5 @@
 # Gluformer: Transformer-Based Personalized Glucose Forecasting with Uncertainty Quantification
-This is the official implementation of the paper "Gluformer: Transformer-Based Personalized Glucose Forecasting with Uncertainty Quantification" ([link]())
+This is the official implementation of the paper "Gluformer: Transformer-Based Personalized Glucose Forecasting with Uncertainty Quantification" ([link]()).
 
 ---
 
