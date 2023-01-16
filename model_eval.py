@@ -32,6 +32,14 @@ def load_data(num_samples, batch_size, len_pred, len_label, len_seq):
     # modify collate to repeat samples
     collate_fn_custom = modify_collate(num_samples)
 
+    train_data = CGMData(PATH, 'train', [len_seq, len_label, len_pred])
+    train_data_loader = DataLoader(train_data,
+                                batch_size=batch_size,
+                                shuffle=True,
+                                num_workers=0,
+                                drop_last=False,
+                                collate_fn = collate_fn_custom)
+
     test_data = CGMData(PATH, 'test', [len_seq, len_label, len_pred])
     test_data_loader = DataLoader(test_data, 
                                 batch_size=batch_size, 
@@ -40,7 +48,7 @@ def load_data(num_samples, batch_size, len_pred, len_label, len_seq):
                                 drop_last=False,
                                 collate_fn = collate_fn_custom)
 
-    return test_data_loader
+    return train_data_loader, test_data_loader
 
 def build_model(model_path, device, d_model, n_heads, d_fcn, r_drop, activ, 
                     num_enc_layers, num_dec_layers, distil, len_seq, len_pred):
@@ -146,7 +154,7 @@ def test(trial_id, loss_name,
     # load data
     if loss_name != "mixture":
         assert num_samples == 1
-    test_data_loader = load_data(num_samples, BATCH_SIZE, len_pred, len_label, len_seq)
+    train_data_loader, test_data_loader = load_data(num_samples, BATCH_SIZE, len_pred, len_label, len_seq)
     # define model
     model = build_model(model_path, device, d_model, n_heads, d_fcn, r_drop, activ, 
                     num_enc_layers, num_dec_layers, distil, len_seq, len_pred)
@@ -168,75 +176,100 @@ def test(trial_id, loss_name,
     save_pred_mean = np.empty((len(SAMPLES), len_pred, num_samples))
     save_pred_var = np.empty((len(SAMPLES), num_samples))
     save_true = np.empty((len(SAMPLES), len_pred, num_samples))
+    save_train_true = {i: [] for i in SAMPLES}
     save_inp = np.empty((len(SAMPLES), len_seq))
+    save_train_inp = {i: [] for i in SAMPLES}
+    save_subj_ids_and_times = {}
 
+    # extract subject ids and time stamps for each sample
     for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(test_data_loader):
-        pred, true, logvar = process_batch(subj_id=subj_id, 
-                                            batch_x=batch_x, 
-                                            batch_y=batch_y, 
-                                            batch_x_mark=batch_x_mark, 
-                                            batch_y_mark=batch_y_mark, 
-                                            len_pred=len_pred, 
-                                            len_label=len_label, 
-                                            model=model, 
-                                            device=device)
-        pred = pred.detach().cpu().numpy(); true = true.detach().cpu().numpy()
-        logvar = logvar.detach().cpu().numpy(); batch_x = batch_x.detach().cpu().numpy()
+         if i in SAMPLES:
+            id = subj_id.detach().cpu().numpy()[0]
+            time = batch_y_mark.detach().cpu().numpy()[0, :, 3:].reshape(-1).tolist() # hour and minute
+            element = (id, *time)
+            save_subj_ids_and_times[element] = i
+    # extract training curves with same subject ids and time stamps
+    for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(train_data_loader):
+        id = subj_id.detach().cpu().numpy()[0]
+        time = batch_y_mark.detach().cpu().numpy()[0, :, 3:].reshape(-1).tolist()
+        element = (id, *time)
+        if element in save_subj_ids_and_times.keys():
+            save_train_inp[save_subj_ids_and_times[element]].append(batch_x.detach().cpu().numpy()[0, :, 0])
+            save_train_true[save_subj_ids_and_times[element]].append(batch_y.detach().cpu().numpy()[0, -len_pred:, 0]) # cut to prediction length
+    # reshape / rescale training curves
+    for i in SAMPLES:
+        save_train_inp[i] = (np.array(save_train_inp[i]) + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+        save_train_true[i] = (np.array(save_train_true[i]) + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
 
-        # calculate log-likelihood
-        likelihood = 0 
-        if loss_name == "mixture":
-            # reshape mean and true as (len_pred, num_samples)
-            pred = pred.transpose((1,0,2)).reshape((pred.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
-            true = true.transpose((1,0,2)).reshape((true.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
-            # reshape logvar as (num_samples)
-            logvar = logvar.squeeze()
-            # calculate log-likelihood
-            likelihood = -0.5 * pred.shape[0] * (np.log(2*np.pi) + logvar)
-            likelihood += -0.5 * np.sum(np.square(pred - true), axis=0) * np.exp(-logvar)
-            likelihood = logsumexp(likelihood) - np.log(num_samples)
-        else:
-            # reshape mean and true as (len_pred, num_samples)
-            pred = pred[0, :, :]
-            true = true[0, :, :]
-            # calculate log-likelihood
-            likelihood = np.mean((pred - true)**2)
-        likelihoods.append(likelihood)
+    # iterate through test data
+    # for i, (subj_id, batch_x, batch_y, batch_x_mark, batch_y_mark) in enumerate(test_data_loader):
+    #     pred, true, logvar = process_batch(subj_id=subj_id, 
+    #                                         batch_x=batch_x, 
+    #                                         batch_y=batch_y, 
+    #                                         batch_x_mark=batch_x_mark, 
+    #                                         batch_y_mark=batch_y_mark, 
+    #                                         len_pred=len_pred, 
+    #                                         len_label=len_label, 
+    #                                         model=model, 
+    #                                         device=device)
+    #     pred = pred.detach().cpu().numpy(); true = true.detach().cpu().numpy()
+    #     logvar = logvar.detach().cpu().numpy(); batch_x = batch_x.detach().cpu().numpy()
+    #     subj_id = subj_id.detach().cpu().numpy(); batch_x_mark = batch_x_mark.detach().cpu().numpy()
 
-        # save samples + predictions for plotting 
-        if i in SAMPLES:
-            save_pred_mean[curr_sample, :, :] = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-            save_true[curr_sample, :, :] = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-            save_inp[curr_sample, :] = (batch_x[0][:, 0] + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-            if loss_name == "mixture":
-                scale = ((UPPER - LOWER) / (SCALE_1 * SCALE_2)) ** 2
-                save_pred_var[curr_sample, :] = scale * np.exp(logvar)
-            curr_sample = curr_sample + 1
+    #     # calculate log-likelihood
+    #     likelihood = 0 
+    #     if loss_name == "mixture":
+    #         # reshape mean and true as (len_pred, num_samples)
+    #         pred = pred.transpose((1,0,2)).reshape((pred.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
+    #         true = true.transpose((1,0,2)).reshape((true.shape[1], -1, num_samples)).transpose((1, 0, 2))[0, :, :]
+    #         # reshape logvar as (num_samples)
+    #         logvar = logvar.squeeze()
+    #         # calculate log-likelihood
+    #         likelihood = -0.5 * pred.shape[0] * (np.log(2*np.pi) + logvar)
+    #         likelihood += -0.5 * np.sum(np.square(pred - true), axis=0) * np.exp(-logvar)
+    #         likelihood = logsumexp(likelihood) - np.log(num_samples)
+    #     else:
+    #         # reshape mean and true as (len_pred, num_samples)
+    #         pred = pred[0, :, :]
+    #         true = true[0, :, :]
+    #         # calculate log-likelihood
+    #         likelihood = np.mean((pred - true)**2)
+    #     likelihoods.append(likelihood)
+
+    #     # save samples + predictions for plotting 
+    #     if i in SAMPLES:
+    #         save_pred_mean[curr_sample, :, :] = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+    #         save_true[curr_sample, :, :] = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+    #         save_inp[curr_sample, :] = (batch_x[0][:, 0] + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+    #         if loss_name == "mixture":
+    #             scale = ((UPPER - LOWER) / (SCALE_1 * SCALE_2)) ** 2
+    #             save_pred_var[curr_sample, :] = scale * np.exp(logvar)
+    #         curr_sample = curr_sample + 1
+
+    #     # transform data back
+    #     pred = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+    #     true = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
+    #     # calculate ape / rmse for 3, 6, 9, 12 points AND full, event, hypo, hyper data
+    #     for horizon in horizons:
+    #         for event in ["full", "event", "hypo", "hyper"]:
+    #             # calculate ape/rmse -> take median/mean over num_samples (inside function)+
+    #             ape[horizon][event] += calculate_ape(pred, true, horizon, event)
+    #             rmse[horizon][event] += calculate_rmse(pred, true, horizon, event)
         
-        # transform data back
-        pred = (pred + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-        true = (true + SCALE_1) / (SCALE_1 * SCALE_2) * (UPPER - LOWER) + LOWER
-        # calculate ape / rmse for 3, 6, 9, 12 points AND full, event, hypo, hyper data
-        for horizon in horizons:
-            for event in ["full", "event", "hypo", "hyper"]:
-                # calculate ape/rmse -> take median/mean over num_samples (inside function)+
-                ape[horizon][event] += calculate_ape(pred, true, horizon, event)
-                rmse[horizon][event] += calculate_rmse(pred, true, horizon, event)
-        
-        # calculate calibration and sharpness (full data) for mixture model
-        if loss_name == "mixture":
-            for i in range(len_pred):
-                ps = [norm.cdf(true[i, 0], pred[i, j], np.sqrt(np.exp(logvar[j]))) 
-                        for j in range(num_samples)]
-                p = np.average(ps)
-                calibration[i].append(p)
+    #     # calculate calibration and sharpness (full data) for mixture model
+    #     if loss_name == "mixture":
+    #         for i in range(len_pred):
+    #             ps = [norm.cdf(true[i, 0], pred[i, j], np.sqrt(np.exp(logvar[j]))) 
+    #                     for j in range(num_samples)]
+    #             p = np.average(ps)
+    #             calibration[i].append(p)
     
-    for horizon in horizons:
-        for event in ["full", "event", "hypo", "hyper"]:
-            ape_horizon_event = np.median(ape[horizon][event])
-            rmse_horizon_event = np.median(rmse[horizon][event])
-            print(f"APE for {event} {5*horizon} minutes: {ape_horizon_event:.6f}")
-            print(f"RMSE for {event} {5*horizon} minutes: {rmse_horizon_event:.6f}")
+    # for horizon in horizons:
+    #     for event in ["full", "event", "hypo", "hyper"]:
+    #         ape_horizon_event = np.median(ape[horizon][event])
+    #         rmse_horizon_event = np.median(rmse[horizon][event])
+    #         print(f"APE for {event} {5*horizon} minutes: {ape_horizon_event:.6f}")
+    #         print(f"RMSE for {event} {5*horizon} minutes: {rmse_horizon_event:.6f}")
 
     if not os.path.exists('./cache/visualize_glucose/'):
         os.makedirs('./cache/visualize_glucose/')
@@ -248,18 +281,21 @@ def test(trial_id, loss_name,
         np.save('./cache/visualize_glucose/pred_mean_infmixt.npy', save_pred_mean)
         np.save('./cache/visualize_glucose/pred_var_infmixt.npy', save_pred_var)
         np.save('./cache/visualize_glucose/calibration_infmixt.npy', calibration)
+        for i in save_train_inp.keys():
+            np.save(f'./cache/visualize_glucose/train_input_{i}.npy', save_train_inp[i])
+            np.save(f'./cache/visualize_glucose/train_true_{i}.npy', save_train_true[i])
 
-    else:
-        varhat = np.mean(likelihoods)
-        likelihood = -0.5*len_pred- 0.5*len_pred*np.log(2*np.pi*varhat)
-        scale = ((UPPER - LOWER) / (SCALE_1 * SCALE_2)) ** 2
-        varhat = scale * varhat
-        print("Average log likelihood: {0}".format(likelihood))
-        print("Variance MLE: {0}".format(varhat))
-        np.save('./cache/visualize_glucose/input.npy', save_inp)
-        np.save('./cache/visualize_glucose/true.npy', save_true)
-        np.save('./cache/visualize_glucose/pred_mean_norm.npy', save_pred_mean)
-        np.save('./cache/visualize_glucose/pred_var_norm.npy', np.array([varhat]))
+    # else:
+    #     varhat = np.mean(likelihoods)
+    #     likelihood = -0.5*len_pred- 0.5*len_pred*np.log(2*np.pi*varhat)
+    #     scale = ((UPPER - LOWER) / (SCALE_1 * SCALE_2)) ** 2
+    #     varhat = scale * varhat
+    #     print("Average log likelihood: {0}".format(likelihood))
+    #     print("Variance MLE: {0}".format(varhat))
+    #     np.save('./cache/visualize_glucose/input.npy', save_inp)
+    #     np.save('./cache/visualize_glucose/true.npy', save_true)
+    #     np.save('./cache/visualize_glucose/pred_mean_norm.npy', save_pred_mean)
+    #     np.save('./cache/visualize_glucose/pred_var_norm.npy', np.array([varhat]))
     
 if __name__ == '__main__':
     test()  
