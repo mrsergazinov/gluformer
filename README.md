@@ -42,6 +42,14 @@ We suggest to start the explortion of our model by running the model on the synt
 ### 2.3 Downloading the data
 For the results obtained in the paper, we use a publicly available CGM data set provided [here](https://github.com/igfox/multi-output-glucose-forecasting). We recommend downloading the data set directly from the authors' repository and using our script `gludata/data/split.py` to split the data. You can visualize and process the data at the same using the `gludata/data/view.ipynb` notebook. If you have trouble with the downloading or pre-processing the data, do not hesitate to raise an issue.
 
+**(Update March 20, 2023)** For simplicity, we provide the data in our repository. The full data set is `UM_data.pkl`. The data corresponds to merging the `processed_cgm_data_train.pkl`, `processed_cgm_data_validation.pkl`, and `processed_cgm_data_test.pkl` in the [source repository](https://github.com/igfox/multi-output-glucose-forecasting). The data comes under the *CC BY-NC-SA* license, which implies that: 
+- You will no attempt re-identification.
+- You will contact the University of Michigan if identifiers are detected.
+- You will not redistribute or resell the data.
+- Data ownership remains with the University of Michigan.
+- Requirements survive changes in ownership of entity.
+
+
 ### 2.4 Running the scripts
 We provide `model_train.py` and `model_eval.py` scripts that can be run from the command line and give an implementation of the training and evaluation loops respectively. Both scripts expect to be run from the root (repository) folder and have all dependencies (specified in the `environment.yaml` file) installed. For an example of what parameters each script takes, see the `trials.txt` file in the `trials/` folder.
 
